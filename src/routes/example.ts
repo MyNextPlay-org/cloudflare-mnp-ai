@@ -2,7 +2,7 @@ import { html } from "@dropsite/respond";
 import example from "../components/example";
 
 export const GET = async () => {
-  const body = example.render("example()");
+  const body = example.render();
 
   return new Response(html`<!DOCTYPE html>
 <html lang="en">
