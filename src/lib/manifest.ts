@@ -27,12 +27,12 @@ export async function getClientEntry(env: Env): Promise<ClientEntry> {
   };
 
   const manifest = await getManifest(env);
-  const entry = manifest?.source?.['src/client']?.ts;
+  const entry = manifest?.['src/client.ts'];
 
   if (!entry) return fallback;
 
   return {
     scriptPath: '/' + entry.file,
-    stylePath: entry.css?.[0] && '/' + entry.css[0],
+    stylePath: entry.css?.[0] ? '/' + entry.css[0] : undefined,
   };
 }
