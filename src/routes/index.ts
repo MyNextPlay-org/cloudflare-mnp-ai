@@ -1,24 +1,13 @@
-import { html, raw } from "@dropsite/respond";
 import example from "../components/example";
 import { getClientEntry } from "../lib/manifest";
 import { defineRoute } from "../lib/routes";
+import main from "../layouts/main";
 
 export const GET = defineRoute(async (_, env) => {
-  const body = example.render();
   const { scriptPath, stylePath } = await getClientEntry(env);
+  const body = example.render();
 
-  return new Response(html`<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Example</title>
-    ${stylePath ? raw(`<link rel="stylesheet" href="${stylePath}">`) : ''}
-  </head>
-  <body>
-    ${raw(body)}
-    <script type="module" src="${scriptPath}"></script>
-  </body>
-</html>`, {
+  return new Response(main.render(body, "Index", scriptPath, stylePath), {
     headers: {
       "Content-Type": "text/html",
     },
