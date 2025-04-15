@@ -1,0 +1,36 @@
+{
+  "name": "cloudflare-template",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "wrangler types && vite build",
+    "preview": "npm run build && vite preview",
+    "start": "vite dev",
+    "test": "vitest",
+    "update": "ncu -u"
+  },
+  "dependencies": {
+    "@dropsite/respond": "3.0.0",
+    "@tailwindcss/vite": "4.1.3",
+    "alpinejs": "3.14.9",
+    "compression": "1.8.0",
+    "sirv": "3.0.1",
+    "tailwindcss": "4.1.3"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "1.0.5",
+    "@cloudflare/vitest-pool-workers": "0.8.11",
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/alpinejs": "3.13.11",
+    "@types/node": "22.14.0",
+    "cross-env": "7.0.3",
+    "npm-check-updates": "17.1.16",
+    "tsx": "4.19.3",
+    "typescript": "5.8.3",
+    "vite": "6.2.5",
+    "vitest": "^3.0.0",
+    "wrangler": "4.7.2"
+  }
+}

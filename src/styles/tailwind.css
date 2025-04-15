@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+.prose table {
+  table-layout: fixed;
+  width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.prose table td,
+.prose table th {
+  word-break: break-word;
+  white-space: pre-wrap;
+}

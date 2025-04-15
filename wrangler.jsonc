@@ -1,0 +1,29 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cloudflare-template",
+	"main": "src/server.ts",
+	"compatibility_date": "2024-09-26",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"observability": {
+		"enabled": true
+	},
+  "vars": {
+		"NODE_ENV": "development"
+	},
+  "assets": {
+    "directory": "./dist/client/",
+    "binding": "ASSETS"
+  },
+	// "routes": [
+	// 	{
+	// 		"pattern": "dev.yourdomain.com",
+	// 		"custom_domain": true
+	// 	}
+	// ],
+}
