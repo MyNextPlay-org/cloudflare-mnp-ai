@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.0.5",
+    "@cloudflare/vitest-pool-workers": "0.8.16",
     "@tailwindcss/typography": "0.5.16",
     "@types/alpinejs": "3.13.11",
     "npm-check-updates": "17.1.18",
