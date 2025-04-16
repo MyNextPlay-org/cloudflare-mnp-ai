@@ -1,4 +1,4 @@
-import { html } from '@dropsite/respond';
+import { html } from '@respond-run/html';
 
 export default {
   name: "example",

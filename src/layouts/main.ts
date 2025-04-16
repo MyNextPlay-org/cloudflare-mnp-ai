@@ -1,4 +1,4 @@
-import { html, raw } from "@dropsite/respond"
+import { html, raw } from '@respond-run/html';
 
 export default {
   render(body: string, title: string, scriptPath: string, stylePath?: string) {

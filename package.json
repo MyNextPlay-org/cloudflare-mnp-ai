@@ -12,7 +12,9 @@
     "update": "ncu -u"
   },
   "dependencies": {
-    "@dropsite/respond": "3.0.0",
+    "@respond-run/html": "0.4.0",
+    "@respond-run/manifest": "0.3.0",
+    "@respond-run/router": "0.2.0",
     "@tailwindcss/vite": "4.1.4",
     "alpinejs": "3.14.9",
     "tailwindcss": "4.1.4"
