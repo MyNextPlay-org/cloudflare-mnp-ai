@@ -12,7 +12,7 @@
     "update": "ncu -u"
   },
   "dependencies": {
-    "@respond-run/html": "0.4.0",
+    "@respond-run/html": "0.5.0",
     "@respond-run/manifest": "0.3.0",
     "@respond-run/router": "0.2.0",
     "@tailwindcss/vite": "4.1.4",
