@@ -1,9 +1,8 @@
 import example from "../components/example";
 import { getClientEntry } from '@respond-run/manifest';
-import { defineRoute } from '@respond-run/router';
 import main from "../layouts/main";
 
-export const GET = defineRoute<Env, ExecutionContext>(async (_, env) => {
+export const GET = async (_: Request, env: Env) => {
   const { scriptPath, stylePath } = await getClientEntry(
     (path) => env.ASSETS.fetch('https://worker' + path)
   );
@@ -14,4 +13,4 @@ export const GET = defineRoute<Env, ExecutionContext>(async (_, env) => {
       "Content-Type": "text/html",
     },
   });
-});
+};
