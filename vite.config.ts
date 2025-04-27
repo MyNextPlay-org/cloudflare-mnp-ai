@@ -12,7 +12,11 @@ export default defineConfig({
   },
   plugins: [
     tailwindcss(),
-    franken({ preflight: true }),
+    franken({
+      preflight: false,
+      layer: true,
+      layerExceptions: ['chart']
+    }),
     cloudflare(),
   ],
 })

@@ -11,7 +11,7 @@ export default {
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         ${stylePath ? raw(`<link rel="stylesheet" href="${stylePath}">`) : ''}
       </head>
-      <body>
+      <body class="uk-theme-zinc uk-radii-md uk-shadows-sm uk-font-sm uk-chart-base">
         ${raw(body)}
         <script type="module" src="${scriptPath}"></script>
       </body>

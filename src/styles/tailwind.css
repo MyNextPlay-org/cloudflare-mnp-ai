@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./franken-ui.css";
 @plugin "@tailwindcss/typography";
 
 .prose table {
