@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "wrangler types && vite build",
+    "build": "npm run types && vite build",
     "preview": "npm run build && vite preview",
     "start": "vite dev",
     "test": "vitest",
+    "types": "wrangler types",
     "update": "ncu -u"
   },
   "dependencies": {
@@ -16,7 +17,10 @@
     "@respond-run/manifest": "0.3.0",
     "@respond-run/router": "0.2.0",
     "@tailwindcss/vite": "4.1.4",
+    "@teamhanko/passkeys-sdk": "0.2.1",
     "alpinejs": "3.14.9",
+    "kysely": "0.28.2",
+    "kysely-d1": "0.4.0",
     "tailwindcss": "4.1.4"
   },
   "devDependencies": {

@@ -1,0 +1,64 @@
+---
+description: Core conventions and workflows for this Respond-Run + Cloudflare Worker project
+globs:
+  - "src/**/*"
+alwaysApply: true
+---
+
+# Architecture & Routing
+
+- All HTTP handlers live under `src/routes/**/*.ts`.  
+  - Export methods (`GET`, `POST`, `OPTIONS`, etc.) that return a `Response`.  
+  - Always set appropriate `Content-Type` and, for API endpoints, include CORS headers via `getCorsHeaders(request)` from `src/lib/cors.ts`.  
+
+- Routing is wired in `src/server.ts` with `createRouter`; new files under `src/routes` are picked up automatically.
+
+# Authentication & Cookies
+
+- Use the passkey helpers in `src/lib/passkeys.ts` and `src/lib/cookies.ts`:  
+  - Always call `getPasskeyApi(env)` to init passkey flows.  
+  - Use `getCookieDomain(request, env)` to build the `Domain=` portion of your `Set-Cookie`.  
+  - For login vs registration, follow the patterns in `src/routes/passkey/start.ts` & `finalize.ts`.  
+
+- Generate new tokens with `generateSecret()` in `src/lib/crypto.ts`.
+
+# Database
+
+- Use the D1 binding on `env.DB`:  
+  ```ts
+  const user = await env.DB
+    .prepare('SELECT …')
+    .bind(...)
+    .first();
+  ```  
+- On writes, catch errors and return `500` with `{ error: '…', details }`.
+
+# Frontend Components
+
+- All Alpine.js components live in `src/components/*.ts`, default-exporting an object with a `name` string.  
+  - The client entry (`src/client.ts`) auto-imports them via `import.meta.glob` and mounts them as `window[name]`.  
+  - Use your `.render()` method to return an `html` template from `@respond-run/html`.  
+
+# Layout & Assets
+
+- The main HTML scaffold is in `src/layouts/main.ts`. Always call:  
+  ```ts
+  main.render(body, title, scriptPath, stylePath)
+  ```  
+- Vite is configured in `vite.config.ts` to emit a manifest and bundle `src/client.ts`.  
+
+# Styling & CSS
+- Tailwind is configured in `src/styles/tailwind.css`. Always use Tailwind classes for styling.  
+- No global CSS files—anything project-wide goes through Tailwind utility classes.
+
+# Testing & Tooling
+
+- Vitest config lives in `vitest.config.ts`, using `@cloudflare/vitest-pool-workers`.  
+- Keep your `.cursorignore` up to date to exclude build artifacts.
+
+# Best Practices
+
+- Follow snake_case for database column names and RPC services.  
+- Use consistent naming in components: the file name (without extension) must match the component’s `name`.  
+- Split large features into multiple routes or components.  
+- Always handle error cases explicitly and return meaningful JSON error messages.

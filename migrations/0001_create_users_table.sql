@@ -1,0 +1,5 @@
+-- Migration number: 0001 	 2025-03-27T21:41:11.183Z
+CREATE TABLE IF NOT EXISTS users (
+  email TEXT PRIMARY KEY,
+  token TEXT NOT NULL UNIQUE
+);

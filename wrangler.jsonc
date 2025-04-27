@@ -13,13 +13,21 @@
 	"observability": {
 		"enabled": true
 	},
-  "vars": {
-		"NODE_ENV": "development"
+	"vars": {
+		"NODE_ENV": "development",
+		"COOKIE_DOMAIN": ".example.com"
 	},
-  "assets": {
-    "directory": "./dist/client/",
-    "binding": "ASSETS"
-  },
+	"assets": {
+		"directory": "./dist/client/",
+		"binding": "ASSETS"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "db-name-here",
+			"database_id": "db-id-here"
+		}
+	],
 	// "routes": [
 	// 	{
 	// 		"pattern": "dev.yourdomain.com",
