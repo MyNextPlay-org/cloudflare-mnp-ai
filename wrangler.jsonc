@@ -24,14 +24,14 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "db-name-here",
-			"database_id": "db-id-here"
+			"database_name": "template",
+			"database_id": "91cb3d52-82bd-4c65-810e-1f167e5e51c5"
 		}
 	],
-	// "routes": [
-	// 	{
-	// 		"pattern": "dev.yourdomain.com",
-	// 		"custom_domain": true
-	// 	}
-	// ],
+	"routes": [
+		{
+			"pattern": "template.dropsite.dev",
+			"custom_domain": true
+		}
+	],
 }
