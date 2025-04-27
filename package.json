@@ -19,6 +19,7 @@
     "@tailwindcss/vite": "4.1.4",
     "@teamhanko/passkeys-sdk": "0.2.1",
     "alpinejs": "3.14.9",
+    "franken-ui": "2.1.0-next.4",
     "kysely": "0.28.2",
     "kysely-d1": "0.4.0",
     "tailwindcss": "4.1.4"
