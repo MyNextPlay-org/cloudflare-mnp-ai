@@ -1,7 +1,5 @@
 ---
 description: Core conventions and workflows for this Respond-Run + Cloudflare Worker project
-globs:
-  - "src/**/*"
 alwaysApply: true
 ---
 
