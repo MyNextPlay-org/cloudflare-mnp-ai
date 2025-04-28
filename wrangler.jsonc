@@ -14,8 +14,7 @@
 		"enabled": true
 	},
 	"vars": {
-		"NODE_ENV": "development",
-		"COOKIE_DOMAIN": ".example.com"
+		"NODE_ENV": "development"
 	},
 	"assets": {
 		"directory": "./dist/client/",

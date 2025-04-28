@@ -1,10 +1,5 @@
 import "./styles/tailwind.css";
-import 'franken-ui/css/franken-ui.css';
-
 import Alpine from "alpinejs";
-import "franken-ui/js/core.iife";
-import "franken-ui/js/chart.iife";
-import "franken-ui/js/icon.iife";
 
 const modules = import.meta.glob('./components/*.ts', { eager: true });
 

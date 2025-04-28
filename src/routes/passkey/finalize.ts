@@ -1,7 +1,7 @@
 import { generateSecret } from '../../lib/crypto'
 import { getCookieDomain } from '../../lib/cookies'
 import { getCorsHeaders } from '../../lib/cors'
-import { getPasskeyApi } from '../../lib/passkeys'
+import { getPasskeyApi } from '../../lib/passkey-server'
 import { getDb } from '../../lib/db'
 
 interface RequestBody {
@@ -37,9 +37,11 @@ export const POST = async (request: Request, env: Env): Promise<Response> => {
     }
 
     const session = user.token
-    const domain = getCookieDomain(request, env)
-    const secure = isSecureRequest(request) ? 'Secure;' : ''
-    const cookie = `token=${session}; Path=/; ${domain}${secure} SameSite=None; Max-Age=${24 * 60 * 60}`
+    const domain = getCookieDomain(request)
+    const secure = isSecureRequest(request) ? 'Secure; SameSite=None; ' : ''
+    const cookie = `token=${session}; Path=/; ${domain}${secure}Max-Age=${24 * 60 * 60}`
+
+    console.log(cookie)
 
     return new Response(JSON.stringify({ success: true, token: session }), {
       headers: { ...cors, 'Content-Type': 'application/json', 'Set-Cookie': cookie },
@@ -68,9 +70,11 @@ export const POST = async (request: Request, env: Env): Promise<Response> => {
     })
   }
 
-  const domain = getCookieDomain(request, env)
-  const secure = isSecureRequest(request) ? 'Secure;' : ''
-  const cookie = `token=${newToken}; Path=/; ${domain}${secure} SameSite=None; Max-Age=${24 * 60 * 60}`
+  const domain = getCookieDomain(request)
+  const secure = isSecureRequest(request) ? 'Secure; SameSite=None; ' : ''
+  const cookie = `token=${newToken}; Path=/; ${domain}${secure}Max-Age=${24 * 60 * 60}`
+
+  console.log(cookie)
 
   return new Response(JSON.stringify({ success: true, token: newToken }), {
     headers: { ...cors, 'Content-Type': 'application/json', 'Set-Cookie': cookie },

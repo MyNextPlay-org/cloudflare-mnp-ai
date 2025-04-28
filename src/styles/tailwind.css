@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./franken-ui.css";
 @plugin "@tailwindcss/typography";
 
 .prose table {
@@ -14,3 +13,5 @@
   word-break: break-word;
   white-space: pre-wrap;
 }
+
+@custom-variant dark (&:where(.dark, .dark *));
