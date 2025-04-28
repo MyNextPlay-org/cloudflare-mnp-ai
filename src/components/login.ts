@@ -1,5 +1,7 @@
 import { handlePasskeyAuth } from "../helpers/passkey-client";
 import { template } from "../helpers/templates";
+import logo from "../../assets/logo.png";
+import passkey from "../../assets/passkey.svg";
 
 export default {
   name: "login",
@@ -16,6 +18,6 @@ export default {
   },
 
   render() {
-    return template("login", { name: this.name });
+    return template("login", { name: this.name, logo, passkey });
   },
 };
