@@ -1,4 +1,4 @@
-import { html } from "@respond-run/html";
+import { template } from "../helpers/templates";
 
 export default {
   name: "example",
@@ -9,11 +9,6 @@ export default {
   },
 
   render() {
-    return html`
-      <div x-data="${this.name}()" class="space-x-2">
-        <button @click="increment()">+</button>
-        <span x-text="count"></span>
-      </div>
-    `;
+    return template("example", { name: this.name });
   },
 };

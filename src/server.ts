@@ -1,6 +1,6 @@
 import { createRouter } from "@respond-run/router";
 
-const globs = import.meta.glob('./routes/**/*.ts', { eager: false })
+const globs = import.meta.glob("./routes/**/*.ts", { eager: false });
 const handleRoutes = createRouter<Env, ExecutionContext>(globs);
 
 export default {

@@ -1,8 +1,13 @@
-import { create, CredentialCreationOptionsJSON, CredentialRequestOptionsJSON, get } from "@github/webauthn-json";
+import {
+  create,
+  CredentialCreationOptionsJSON,
+  CredentialRequestOptionsJSON,
+  get,
+} from "@github/webauthn-json";
 
 export type PasskeyOptions =
-  | ({ mode: 'registration' } & CredentialCreationOptionsJSON)
-  | ({ mode: 'login' } & CredentialRequestOptionsJSON);
+  | ({ mode: "registration" } & CredentialCreationOptionsJSON)
+  | ({ mode: "login" } & CredentialRequestOptionsJSON);
 
 export type PasskeyFinalizeOutput =
   | { success: true; token: string }
@@ -18,9 +23,9 @@ export async function handlePasskeyAuth(emailInput: string): Promise<PasskeyFina
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
+    body: JSON.stringify({ email }),
   });
-  const options = await startResponse.json() as PasskeyOptions;
+  const options = (await startResponse.json()) as PasskeyOptions;
 
   // Depending on the returned mode, call the appropriate WebAuthn function.
   let credential;
@@ -37,7 +42,7 @@ export async function handlePasskeyAuth(emailInput: string): Promise<PasskeyFina
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, credential })
+    body: JSON.stringify({ email, credential }),
   });
   const result = (await finalizeResponse.json()) as PasskeyFinalizeOutput;
 

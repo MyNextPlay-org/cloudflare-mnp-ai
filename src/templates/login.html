@@ -1,0 +1,11 @@
+<div x-data="$.name()" class="flex flex-col items-center justify-center min-h-screen -mt-6">
+  <a href="/"><img class="w-50 mb-8" src="/assets/logo.png" alt="Respond" /></a>
+  <div class="flex flex-col items-center justify-center space-y-2">
+    <input x-model="email" type="email" name="email" placeholder="Enter your email" class="placeholder-gray-500 text-center w-60 form-input box-border resize-none overflow-auto h-10 bg-white border-slate-300 border-1 focus:bg-white focus:border-slate-400 rounded" />
+    <div x-cloak x-show="error" x-model="error" class="text-sm text-red-800 font-bold"></div>
+    <div @click="submit" class="w-60 py-1 h-10 cursor-pointer shrink-0 whitespace-nowrap bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 text-white flex items-center justify-center rounded">
+      <img src="/assets/passkey.svg" class="mr-1" />
+      <span>Sign in with Passkey</span>
+    </div>
+  </div>
+</div>
