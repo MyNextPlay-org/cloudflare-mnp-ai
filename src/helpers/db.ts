@@ -1,11 +1,9 @@
 import { Kysely } from "kysely";
 import { D1Dialect } from "kysely-d1";
+import { User } from "../models/user";
 
 export interface Database {
-  users: {
-    email: string;
-    token: string;
-  };
+  users: User;
 }
 
 // Reuse your Env type (the Worker binding with `.DB`)

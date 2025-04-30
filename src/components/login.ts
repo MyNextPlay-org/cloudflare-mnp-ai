@@ -9,11 +9,29 @@ export default {
   error: "",
 
   async submit() {
-    const resp = await handlePasskeyAuth(this.email);
-    if ("error" in resp && resp.error) {
-      this.error = resp.error;
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: this.email }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Login failed with status ${res.status}`);
+    }
+
+    const data = (await res.json()) as { status: string };
+
+    if (data.status === "existing") {
+      const resp = await handlePasskeyAuth(this.email);
+      if ("error" in resp && resp.error) {
+        this.error = resp.error;
+      } else {
+        window.location.href = "/";
+      }
+    } else if (data.status === "signup_started") {
+      this.error = "Check your email for verification link.";
     } else {
-      window.location.href = "/";
+      console.warn("Unexpected status:", data.status);
     }
   },
 

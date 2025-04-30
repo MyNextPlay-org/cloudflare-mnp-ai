@@ -24,7 +24,7 @@
 		{
 			"binding": "DB",
 			"database_name": "template",
-			"database_id": "91cb3d52-82bd-4c65-810e-1f167e5e51c5"
+			"database_id": "7ecd3c04-07d2-4c5a-91d3-ee5e5c5046c8"
 		}
 	],
 	"routes": [
@@ -33,4 +33,17 @@
 			"custom_domain": true
 		}
 	],
+  "workflows": [
+    {
+      "name": "signup",
+      "binding": "SIGNUP_WORKFLOW",
+      "class_name": "SignupWorkflow"
+    }
+  ],
+  "send_email": [
+    {
+      "name": "SEND_EMAIL",
+      "destination_address": "template@dropsite.dev"
+    }
+  ]
 }

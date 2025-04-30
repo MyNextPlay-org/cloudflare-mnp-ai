@@ -39,7 +39,7 @@ alwaysApply: true
 
 # Layout & Assets
 
-- The main HTML scaffold is in `src/layouts/main.ts`. Always call:  
+- The main HTML scaffold is in `src/components/layout.ts`. Always call:  
   ```ts
   main.render(body, title, scriptPath, stylePath)
   ```  

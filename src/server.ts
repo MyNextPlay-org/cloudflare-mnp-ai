@@ -8,3 +8,5 @@ export default {
     return handleRoutes(req, env, ctx);
   },
 } satisfies ExportedHandler<Env>;
+
+export { SignupWorkflow } from "./workflows/signup";

@@ -1,6 +1,6 @@
 import example from "../components/example";
 import { getClientEntry } from "@respond-run/manifest";
-import main from "../components/layout";
+import layout from "../components/layout";
 
 export const GET = async (_request: Request, env: Env, _ctx: ExecutionContext) => {
   const { scriptPath, stylePath } = await getClientEntry((path) =>
@@ -8,7 +8,7 @@ export const GET = async (_request: Request, env: Env, _ctx: ExecutionContext) =
   );
 
   return new Response(
-    main.render({ body: example.render(), title: "Index", scriptPath, stylePath }),
+    layout.render({ body: example.render(), title: "Index", scriptPath, stylePath }),
     {
       headers: {
         "Content-Type": "text/html",

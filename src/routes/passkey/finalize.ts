@@ -1,17 +1,11 @@
-import { generateSecret } from "../../helpers/crypto";
-import { getCookieDomain } from "../../helpers/cookies";
+import { parseTokenCookie, setTokenCookie } from "../../helpers/cookies";
 import { getCorsHeaders } from "../../helpers/cors";
 import { getPasskeyApi } from "../../helpers/passkey-server";
-import { getDb } from "../../helpers/db";
+import { findByEmail } from "../../models/user";
 
 interface RequestBody {
   email: string;
   credential: any;
-}
-
-function isSecureRequest(request: Request): boolean {
-  const proto = request.headers.get("x-forwarded-proto");
-  return proto === "https";
 }
 
 export const POST = async (request: Request, env: Env): Promise<Response> => {
@@ -20,14 +14,16 @@ export const POST = async (request: Request, env: Env): Promise<Response> => {
   const email = body.email.trim().toLowerCase();
 
   const passkey = getPasskeyApi(env);
-  const user = await getDb(env)
-    .selectFrom("users")
-    .select("token")
-    .where("email", "=", email)
-    .executeTakeFirst();
+  const user = await findByEmail(env, email);
 
-  // login flow
-  if (user) {
+  if (!user?.verified) {
+    return new Response(JSON.stringify({ error: "User not verified" }), {
+      status: 401,
+      headers: { ...cors, "Content-Type": "application/json" },
+    });
+  }
+
+  if (user?.registered) {
     const result = await passkey.login.finalize(body.credential);
     if (!result.token) {
       return new Response(JSON.stringify({ error: "Login failed" }), {
@@ -36,15 +32,18 @@ export const POST = async (request: Request, env: Env): Promise<Response> => {
       });
     }
 
-    const session = user.token;
-    const domain = getCookieDomain(request);
-    const secure = isSecureRequest(request) ? "Secure; SameSite=None; " : "";
-    const cookie = `token=${session}; Path=/; ${domain}${secure}Max-Age=${24 * 60 * 60}`;
+    const cookie = setTokenCookie(request, user.token!);
 
-    console.log(cookie);
-
-    return new Response(JSON.stringify({ success: true, token: session }), {
+    return new Response(JSON.stringify({ success: true }), {
       headers: { ...cors, "Content-Type": "application/json", "Set-Cookie": cookie },
+    });
+  }
+
+  const token = parseTokenCookie(request);
+  if (!token) {
+    return new Response(JSON.stringify({ error: "No token" }), {
+      status: 401,
+      headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 
@@ -57,23 +56,7 @@ export const POST = async (request: Request, env: Env): Promise<Response> => {
     });
   }
 
-  const newToken = generateSecret();
-  try {
-    await getDb(env).insertInto("users").values({ email, token: newToken }).execute();
-  } catch (err) {
-    return new Response(JSON.stringify({ error: "DB insert failed", details: String(err) }), {
-      status: 500,
-      headers: { ...cors, "Content-Type": "application/json" },
-    });
-  }
-
-  const domain = getCookieDomain(request);
-  const secure = isSecureRequest(request) ? "Secure; SameSite=None; " : "";
-  const cookie = `token=${newToken}; Path=/; ${domain}${secure}Max-Age=${24 * 60 * 60}`;
-
-  console.log(cookie);
-
-  return new Response(JSON.stringify({ success: true, token: newToken }), {
-    headers: { ...cors, "Content-Type": "application/json", "Set-Cookie": cookie },
+  return new Response(JSON.stringify({ success: true }), {
+    headers: { ...cors, "Content-Type": "application/json" },
   });
 };

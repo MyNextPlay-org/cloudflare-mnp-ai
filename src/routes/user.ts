@@ -1,5 +1,6 @@
+import { parseTokenCookie } from "../helpers/cookies";
 import { getCorsHeaders } from "../helpers/cors";
-import { getDb } from "../helpers/db";
+import { findByToken } from "../models/user";
 
 export const OPTIONS = async (request: Request): Promise<Response> => {
   const cors = getCorsHeaders(request);
@@ -15,21 +16,15 @@ export const OPTIONS = async (request: Request): Promise<Response> => {
 
 export const GET = async (request: Request, env: Env): Promise<Response> => {
   const cors = getCorsHeaders(request);
-  const cookieHeader = request.headers.get("Cookie") || "";
-  const match = cookieHeader.match(/token=([^;]+)/);
-  if (!match) {
+  const token = parseTokenCookie(request);
+  if (!token) {
     return new Response(JSON.stringify({ error: "No token" }), {
       status: 401,
       headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 
-  const token = match[1];
-  const user = await getDb(env)
-    .selectFrom("users")
-    .select("email")
-    .where("token", "=", token)
-    .executeTakeFirst();
+  const user = await findByToken(env, token);
 
   if (!user) {
     return new Response(JSON.stringify({ error: "Invalid token" }), {
