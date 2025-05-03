@@ -1,0 +1,49 @@
+---
+description: Guidelines for writing pure, well-typed, documented utility and helper functions in src/helpers
+globs:
+  - src/helpers/**/*.ts
+alwaysApply: false
+---
+
+- **File naming:**  
+  - Files under `src/helpers/` use kebab-case matching their domain (e.g. `cookies.ts`, `cors.ts`, `crypto.ts`, `db.ts`).
+
+- **Exports:**  
+  - Prefer **named exports** for each function.  
+  - Avoid default exports to improve tree-shaking and clarity.
+
+- **Single responsibility:**  
+  - Each helper file should export a cohesive set of related utilities.  
+  - Do not mix unrelated helpers in the same file.
+
+- **Pure functions:**  
+  - Utility functions must be pure and side-effect–free.  
+  - I/O or environment-dependent code (e.g. reading cookies, setting headers) belongs in specialized helpers.
+
+- **Type annotations:**  
+  - Explicitly annotate all parameters and return types (no `any`).  
+  - Use `Promise<Type>` for async functions.
+
+- **Error handling:**  
+  - Throw errors on invalid inputs with clear, descriptive messages.  
+  - Do not swallow errors silently.
+
+- **Documentation:**  
+  - Precede each exported function with a JSDoc block including `@param`, `@returns`, and a brief description.
+
+- **Async/await:**  
+  - Use `async`/`await` consistently for asynchronous operations; avoid mixing callbacks and raw promises.
+
+- **Imports:**  
+  - Group and alphabetize imports:  
+    1. External modules (e.g. `import { html } from "@respond-run/html";`)  
+    2. Internal helpers (e.g. `import { getCookieDomain } from "./cookies";`)  
+  - Use named imports; avoid `import * as ...`.
+
+- **Testing:**  
+  - Create a corresponding test under `test/helpers/` for each helper file.  
+  - Cover both typical and edge-case scenarios, including error conditions.
+
+- **Formatting:**  
+  - Follow project style: 2-space indent, single quotes, semicolons.  
+  - End every file with exactly one newline and no trailing whitespace.

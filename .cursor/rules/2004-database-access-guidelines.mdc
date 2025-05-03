@@ -1,0 +1,70 @@
+---
+description: Guidelines for database access using Kysely D1, `helpers/db.ts`, and model functions in `src/models`
+globs:
+  - src/helpers/db.ts
+  - src/models/**/*.ts
+alwaysApply: false
+---
+
+- **DB helper (`helpers/db.ts`)**  
+  ```ts
+  export function getDb(env: Env): Kysely<Database> {
+    return new Kysely({ dialect: new D1Dialect({ database: env.DB }) });
+  }
+````
+
+* `Env.DB` must match `wrangler.jsonc` binding.
+
+* Define `interface Database { users: User; /* other tables */ }`.
+
+* **Model files (`src/models/*.ts`)**
+
+  * Use **named exports** for each function (no default).
+  * Strongly type params & return values (`Promise<User | undefined>`, `Promise<void>`, `Promise<number>`).
+
+* **Query patterns**
+
+  * **Select**:
+
+    ```ts
+    await getDb(env)
+      .selectFrom('users')
+      .selectAll()
+      .where('email', '=', email)
+      .executeTakeFirst();
+    ```
+  * **Insert/Upsert**:
+
+    ```ts
+    await getDb(env)
+      .insertInto('users')
+      .values({ … })
+      .onConflict(oc => oc.column('email').doUpdateSet({ … }))
+      .execute();
+    ```
+  * **Update**:
+
+    ```ts
+    const [res] = await getDb(env)
+      .updateTable('users')
+      .set({ verified: true, … })
+      .where('magic_token', '=', token)
+      .execute();
+    return Number(res.numUpdatedRows);
+    ```
+
+* **Error handling**
+
+  * Let exceptions bubble or catch and rethrow with context.
+  * Do not return raw DB errors to clients.
+
+* **Import ordering**
+
+  1. External libs (`import { Kysely } from 'kysely';`)
+  2. Internal helpers (`import { getDb } from '../helpers/db';`)
+  3. Model types (`import { User } from './user';`)
+
+* **Testing**
+
+  * Place unit tests under `test/models/`.
+  * Mock `env.DB` to an in-memory D1 or stubbed interface.

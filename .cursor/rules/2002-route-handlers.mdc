@@ -1,0 +1,63 @@
+---
+description: Conventions for defining route handlers in `src/routes`
+globs:
+  - src/routes/**/*.ts
+alwaysApply: false
+---
+
+- **File naming**  
+  - Route files live under `src/routes/` and use lowercase, dash-separated names (e.g. `login.ts`, `passkey/start.ts`, `verify.ts`).
+
+- **Exports**  
+  - Export exactly one handler per HTTP method:  
+    ```ts
+    export const GET = async (request: Request, env: Env, ctx: ExecutionContext) => { … }
+    export const POST = async (request: Request, env: Env, ctx: ExecutionContext) => { … }
+    export const OPTIONS = async (request: Request) => { … }
+    ```  
+  - Prefix unused parameters with an underscore (e.g. `_request`, `_ctx`).
+
+- **Import ordering** (separate groups by a blank line, alphabetize within each):  
+  1. Framework & router (e.g. `import { createRouter } from "@respond-run/router"`)  
+  2. External libraries (e.g. `import { Resend } from "resend"` )  
+  3. Helpers & middleware (e.g. `import { getCorsHeaders } from "../helpers/cors"`)  
+  4. Models & workflows (e.g. `import { findByEmail } from "../models/user"`)  
+  5. UI/rendering (e.g. `import layout from "../helpers/layout"`, `import { getClientEntry } from "@respond-run/manifest"`)
+
+- **HTML‐rendering handlers**  
+  ```ts
+  const { scriptPath, stylePath } = await getClientEntry(path => env.ASSETS.fetch("https://worker" + path))
+  return new Response(
+    layout({ body: login.render(), title: "Login", scriptPath, stylePath }),
+    { headers: { "Content-Type": "text/html" } }
+  )
+````
+
+* **JSON API handlers**
+
+  ```ts
+  const cors = getCorsHeaders(request)
+  try {
+    // … business logic …
+    return new Response(JSON.stringify({ success: true, data }), {
+      status: 200,
+      headers: { "Content-Type": "application/json", ...cors },
+    })
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json", ...cors },
+    })
+  }
+  ```
+
+* **CORS support**
+
+  * Always implement an `OPTIONS` handler returning `204` with `Access-Control-Allow-*` from `getCorsHeaders(request)`.
+  * Include the same CORS headers on all other methods.
+
+* **Error handling**
+
+  * Catch and return JSON `{ error: string }` with an appropriate status code.
+
+* End each file with a single newline and no trailing whitespace.

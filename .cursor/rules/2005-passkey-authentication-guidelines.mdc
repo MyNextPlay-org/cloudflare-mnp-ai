@@ -1,0 +1,52 @@
+---
+description: Conventions for passkey authentication using WebAuthn JSON client & Hanko SDK on server
+globs:
+  - src/helpers/passkey-client.ts
+  - src/helpers/passkey-server.ts
+  - src/routes/passkey/**/*.ts
+alwaysApply: false
+---
+
+- **Client helper (`passkey-client.ts`)**  
+  - Validate and normalize email: `emailInput.trim().toLowerCase()`.  
+  - Fetch `/passkey/start` with `{ email }`, parse `PasskeyOptions`.  
+  - Call `get(options)` if `mode==='login'`, else `create(options)`.  
+  - POST to `/passkey/finalize` with `{ email, credential }`.  
+  - Return `PasskeyFinalizeOutput` union (`{ success: true; token }` or `{ error }`).  
+
+- **Server helper (`passkey-server.ts`)**  
+  ```ts
+  export function getPasskeyApi(env: Env) {
+    const { PASSKEYS_TENANT_ID, PASSKEYS_SECRET_API_KEY } = env;
+    if (!PASSKEYS_TENANT_ID || !PASSKEYS_SECRET_API_KEY)
+      throw new Error('Missing PASSKEYS_* env vars');
+    return tenant({ tenantId: PASSKEYS_TENANT_ID, apiKey: PASSKEYS_SECRET_API_KEY });
+  }
+```
+
+* Throw clearly if env vars are missing.
+
+* **Route handlers**
+
+  * Under `src/routes/passkey/start.ts` and `finalize.ts`.
+  * Use `getCorsHeaders(request)` for CORS.
+  * Validate user with `findByEmail`.
+  * In `POST /start`, return JSON `{ mode, …options }`.
+  * In `POST /finalize`, based on `user.registered`, call `passkey.login.finalize` or `passkey.registration.finalize`.
+  * On login success, set cookie via `setTokenCookie`.
+
+* **Error & status codes**
+
+  * `401` if user not verified or missing token.
+  * `500` if finalize fails.
+  * Return JSON `{ error: string }`.
+
+* **Import ordering**
+
+  1. External SDKs (`@github/webauthn-json`, Hanko)
+  2. Helpers (`getCorsHeaders`, `setTokenCookie`, `findByEmail`)
+  3. Types & interfaces
+
+* **Testing**
+
+  * Tests under `test/routes/passkey/`, mock WebAuthn flows and Hanko API.

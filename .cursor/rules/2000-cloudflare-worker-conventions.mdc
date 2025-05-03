@@ -1,0 +1,66 @@
+---
+description: Conventions for building Cloudflare Workers with @respond-run/router, Vite, D1, assets and workflows
+globs:
+  - wrangler.jsonc
+  - src/server.ts
+  - src/routes/**/*.ts
+  - src/workflows/**/*.ts
+alwaysApply: true
+---
+
+- **Project config (wrangler.jsonc)**  
+  - Declare `"name"`, `"main"`, `"compatibility_date"`, and any `"compatibility_flags"`.  
+  - Bind durable objects/workflows under `"workflows"` with correct `class_name`.  
+  - Bind D1 under `"d1_databases"` matching `Env.DB`.  
+  - Configure static assets (`"assets.directory"` + `"assets.binding":"ASSETS"`).  
+
+- **Server entrypoint (`src/server.ts`)**  
+  ```ts
+  import { createRouter } from "@respond-run/router";
+  const globs = import.meta.glob("./routes/**/*.ts", { eager: false });
+  const handleRoutes = createRouter<Env, ExecutionContext>(globs);
+  export default {
+    async fetch(req: Request, env: Env, ctx: ExecutionContext) {
+      return handleRoutes(req, env, ctx);
+    },
+  } satisfies ExportedHandler<Env>;
+  export { SignupWorkflow } from "./workflows/signup";
+```
+
+* Use `satisfies ExportedHandler<Env>` for type safety.
+
+* Keep route imports lazy (`eager: false`).
+
+* **Route handlers**
+
+  * Place under `src/routes/…`.
+  * Export one function per HTTP method (`GET`, `POST`, `OPTIONS`, etc).
+  * Signature: `(request: Request, env: Env, ctx: ExecutionContext) => Promise<Response>`.
+  * Prefix unused params with `_`.
+
+* **Asset & client bundling**
+
+  ```ts
+  import { getClientEntry } from "@respond-run/manifest";
+  const { scriptPath, stylePath } = await getClientEntry(path =>
+    env.ASSETS.fetch("https://worker" + path)
+  );
+  ```
+
+  * Bundle frontend with Vite (`vite.config.ts` uses `@tailwindcss/vite` and `@cloudflare/vite-plugin`).
+
+* **Workflows**
+
+  * Under `src/workflows/*.ts`, classes extend `WorkflowEntrypoint<Env, Params>`.
+  * Include steps via `step.do(description, async () => { … })`.
+  * Bind them in `wrangler.jsonc` and re-export from `src/server.ts`.
+
+* **Error handling & CORS**
+
+  * Always handle and return appropriate `Response` codes.
+  * CORS for API routes: use `getCorsHeaders(request)` in `OPTIONS` and other handlers.
+
+* **Formatting & style**
+
+  * 2-space indent, single quotes, semicolons.
+  * End files with one newline, no trailing whitespace.

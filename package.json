@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "ai": "mdcopy -ext ts -ext sql -ext json -unmatch .d.ts -unmatch -lock.json",
+    "ai": "mdcopy -ext .example -ext js -ext jsonc -ext ts -ext sql -ext json -ext html -ext css -unmatch .d.ts -unmatch -lock.json",
     "dev": "vite dev",
     "build": "npm run types && vite build",
     "preview": "npm run build && vite preview",

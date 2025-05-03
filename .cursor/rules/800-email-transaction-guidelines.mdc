@@ -1,0 +1,56 @@
+---
+description: Guidelines for sending transactional emails with Resend in workflows and handlers
+globs:
+  - src/workflows/**/*.ts
+alwaysApply: false
+---
+
+- **SDK initialization**  
+  ```ts
+  import { Resend } from 'resend';
+  const resend = new Resend(this.env.RESEND_API_KEY);
+````
+
+* Ensure `env.RESEND_API_KEY` is present or throw.
+
+* **Step structure**
+
+  ```ts
+  await step.do('send verification email', async () => {
+    const link = `${origin}/verify?token=${token}`;
+    await resend.emails.send({
+      from: 'verify@yourdomain.com',
+      to: email,
+      subject: 'Verify your email',
+      html: `<p>Click to verify: <a href="${link}">${link}</a></p>`,
+    });
+  });
+  ```
+
+  * Use `step.do` for idempotency & retries.
+
+* **Email content**
+
+  * Use absolute URLs built from `origin`.
+  * Wrap links in `<a>` tags for clickability.
+  * Provide clear `subject` and valid `from` address.
+
+* **Error handling**
+
+  * Let failures propagate so the workflow step can retry or fail visibly.
+  * Log meaningful messages for debugging.
+
+* **Import ordering**
+
+  1. Workflow types (`WorkflowEntrypoint`, `WorkflowStep`)
+  2. Resend SDK
+  3. Model/upsert helpers
+
+* **Testing**
+
+  * Under `test/workflows/`, mock `Resend` and assert `.send` is called with correct params.
+
+* **Formatting & style**
+
+  * 2-space indent, single quotes, semicolons.
+  * End file with one newline.

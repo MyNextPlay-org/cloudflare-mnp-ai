@@ -1,0 +1,18 @@
+---
+description: Enforce consistent naming, import order, whitespace, and file naming conventions across all code files
+globs:
+  - 'src/**/*.{ts,js,css,html,md}'
+alwaysApply: true
+---
+- **File & folder names** must use **kebab-case** (e.g. `user-profile.ts`, `src/components/login-form/`).
+- **Variables & functions** must use **camelCase** (e.g. `getCookieDomain`, `handlePasskeyAuth`).
+- **Constants** must use **UPPER_SNAKE_CASE** (e.g. `MAGIC_TOKEN_EXPIRES_AT`, `NODE_ENV`).
+- **Import statements** must be grouped and separated by a single blank line in this order:
+  1. Built-in modules (e.g. `fs`, `path`)  
+  2. Third-party packages (e.g. `import Alpine from 'alpinejs';`)  
+  3. Aliased imports (e.g. `@respond-run/html`)  
+  4. Relative imports (e.g. `../../helpers/db`)  
+- Within each group, **sort imports alphabetically**.
+- Use **2-space indentation** in all code files.
+- Wrap lines at **100 characters**; break or reformat longer expressions.
+- Ensure every file ends with **exactly one newline** and no trailing whitespace.

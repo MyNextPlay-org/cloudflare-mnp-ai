@@ -1,0 +1,54 @@
+---
+description: Blueprint for creating new Alpine components under src/components
+globs:
+  - src/components/*/*.{ts,html,css}
+alwaysApply: false
+---
+
+When adding a new component directory under `src/components`, follow this pattern:
+
+1. **Directory & filenames**  
+   - Directory name = component name in kebab-case (e.g. `src/components/my-widget`)  
+   - Files inside must be named:
+     - `my-widget.ts`
+     - `my-widget.html`
+     - `my-widget.css`
+
+2. **my-widget.ts**  
+   ```ts
+   import "./my-widget.css";
+   import { template } from "../../helpers/templates";
+
+   export default {
+     // 1. State properties
+     count: 0,
+
+     // 2. Methods
+     increment() {
+       this.count++;
+     },
+
+     // 3. Render uses `template("my-widget")`
+     render() {
+       return template("my-widget");
+     },
+   };
+````
+
+3. **my-widget.html**
+
+   ```html
+   <div x-data="myWidget()" class="space-x-2">
+     <button @click="increment()">+</button>
+     <span x-text="count"></span>
+   </div>
+   ```
+
+4. **my-widget.css**
+
+   ```css
+   /* Component-specific styles go here */
+   ```
+
+5. **Alpine registration**
+   Ensure your helper in `src/helpers/components.ts` will pick up this directory so that you can invoke it in HTML via `x-data="myWidget()"`.

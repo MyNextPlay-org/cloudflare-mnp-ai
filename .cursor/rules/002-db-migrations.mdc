@@ -1,0 +1,23 @@
+---
+description: Enforce consistent SQL migration filenames, headers, and DDL patterns
+globs: 
+  - migrations/*.sql
+alwaysApply: true
+---
+
+- **Filename** must match `000n_description.sql`, where `000n` is a zero-padded 4-digit migration number that increments sequentially (e.g. `0001_create_users_table.sql`).
+- **Header comment**: the very first non-empty line must be  
+  ```sql
+  -- Migration number: 0001    2025-03-27T21:41:11.183Z
+```
+
+reflecting the filename’s number and an ISO 8601 UTC timestamp.
+
+* **Allowed statements**:
+
+  * `CREATE TABLE IF NOT EXISTS table_name (…)` for new tables.
+  * `ALTER TABLE table_name …` for schema changes.
+  * **Disallow** `DROP TABLE`, `DROP COLUMN`, or any destructive operations in these files.
+* **Identifiers**: use **snake\_case** for all table and column names.
+* **Column types**: timestamp and expiry columns must use proper SQL types (`TIMESTAMP` or `DATETIME`), not `TEXT`.
+* End the file with exactly one newline and no trailing whitespace.
