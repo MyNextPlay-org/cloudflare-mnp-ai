@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "ai": "mdcopy -ext .example -ext js -ext jsonc -ext ts -ext sql -ext json -ext html -ext css -unmatch .d.ts -unmatch -lock.json",
+    "ai:cursor": "cd .cursor && mdcopy -ext mdc",
     "dev": "vite dev",
     "build": "npm run types && vite build",
     "preview": "npm run build && vite preview",
