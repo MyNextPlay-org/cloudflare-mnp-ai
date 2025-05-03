@@ -1,5 +1,6 @@
-import { handlePasskeyAuth } from "../helpers/passkey-client";
-import { template } from "../helpers/templates";
+import "./login.css";
+import { handlePasskeyAuth } from "../../helpers/passkey-client";
+import { template } from "../../helpers/templates";
 import logo from "../../assets/logo.png";
 import passkey from "../../assets/passkey.svg";
 

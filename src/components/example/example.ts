@@ -1,4 +1,5 @@
-import { template } from "../helpers/templates";
+import "./example.css";
+import { template } from "../../helpers/templates";
 
 export default {
   name: "example",

@@ -1,8 +1,8 @@
 // src/routes/login.ts
-import login from "../components/login";
+import login from "../components/login/login";
 import { getClientEntry } from "@respond-run/manifest";
-import layout from "../components/layout";
 import { findByEmail } from "../models/user";
+import layout from "../helpers/layout";
 
 export const GET = async (_request: Request, env: Env, _ctx: ExecutionContext) => {
   const { scriptPath, stylePath } = await getClientEntry((path) =>
@@ -10,7 +10,7 @@ export const GET = async (_request: Request, env: Env, _ctx: ExecutionContext) =
   );
 
   return new Response(
-    layout.render({
+    layout({
       body: login.render(),
       title: "Login",
       scriptPath,

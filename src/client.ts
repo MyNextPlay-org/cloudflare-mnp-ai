@@ -1,7 +1,7 @@
-import "./styles/tailwind.css";
+import "./components/layout/layout.css";
 import Alpine from "alpinejs";
 
-const modules = import.meta.glob("./components/*.ts", { eager: true });
+const modules = import.meta.glob("./components/*/*.ts", { eager: true });
 
 Object.entries(modules).forEach(([_, mod]) => {
   const component = (mod as { default: { name?: string } }).default;
