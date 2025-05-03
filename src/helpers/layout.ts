@@ -1,6 +1,6 @@
 import { raw } from "@respond-run/html";
 import { template } from "./templates";
-import favIcon from "./favicon.ico";
+import favIcon from "../components/layout/favicon.ico";
 
 export default function layout(vars: {
   body: string;

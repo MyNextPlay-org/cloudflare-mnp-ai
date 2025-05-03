@@ -5,7 +5,6 @@ import logo from "../../assets/logo.png";
 import passkey from "../../assets/passkey.svg";
 
 export default {
-  name: "login",
   email: "",
   error: "",
 
@@ -37,6 +36,6 @@ export default {
   },
 
   render() {
-    return template("login", { name: this.name, logo, passkey });
+    return template("login", { logo, passkey });
   },
 };
