@@ -7,6 +7,7 @@ import passkey from "../../assets/passkey.svg";
 export default {
   email: "",
   error: "",
+  _autoLoginTriggered: false,
 
   async submit() {
     const res = await fetch("/login", {
@@ -32,6 +33,22 @@ export default {
       this.error = "Check your email for verification link.";
     } else {
       console.warn("Unexpected status:", data.status);
+    }
+  },
+
+  async init() {
+    // Only run if not already triggered
+    if (this._autoLoginTriggered) return;
+    this._autoLoginTriggered = true;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const emailParam = params.get("email");
+      if (emailParam) {
+        this.email = decodeURIComponent(emailParam);
+        await this.submit();
+      }
+    } catch (e) {
+      // Ignore errors
     }
   },
 
