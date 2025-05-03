@@ -76,3 +76,13 @@ export async function verifyByMagicToken(
   // now result is a single UpdateResult, so numUpdatedRows exists
   return Number(result.numUpdatedRows);
 }
+
+/** Mark a user as registered by email */
+export async function setRegisteredByEmail(env: Env, email: string): Promise<number> {
+  const [result] = await getDb(env)
+    .updateTable("users")
+    .set({ registered: true })
+    .where("email", "=", email)
+    .execute();
+  return Number(result.numUpdatedRows);
+}

@@ -1,7 +1,7 @@
 import { parseTokenCookie, setTokenCookie } from "../../helpers/cookies";
 import { getCorsHeaders } from "../../helpers/cors";
 import { getPasskeyApi } from "../../helpers/passkey-server";
-import { findByEmail } from "../../models/user";
+import { findByEmail, setRegisteredByEmail } from "../../models/user";
 
 interface RequestBody {
   email: string;
@@ -55,6 +55,8 @@ export const POST = async (request: Request, env: Env): Promise<Response> => {
       headers: { ...cors, "Content-Type": "application/json" },
     });
   }
+
+  await setRegisteredByEmail(env, email);
 
   return new Response(JSON.stringify({ success: true }), {
     headers: { ...cors, "Content-Type": "application/json" },
