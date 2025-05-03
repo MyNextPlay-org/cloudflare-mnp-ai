@@ -24,13 +24,17 @@ export class SignupWorkflow extends WorkflowEntrypoint<Env, Params> {
       // build the magic-link off of the passed origin
       const link = `${origin}/verify?token=${token}`;
       const resend = new Resend(this.env.RESEND_API_KEY);
-
-      await resend.emails.send({
-        from: "verify@resend.dev",
-        to: email,
-        subject: "Verify your email",
-        html: `<p>Click to verify: ${link}</p>`,
-      });
+      try {
+        await resend.emails.send({
+          from: "verify@resend.dev",
+          to: email,
+          subject: "Verify your email",
+          html: `<p>Click to verify: ${link}</p>`,
+        });
+      } catch (err) {
+        console.error("Failed to send verification email:", err);
+        throw err;
+      }
     });
   }
 }
