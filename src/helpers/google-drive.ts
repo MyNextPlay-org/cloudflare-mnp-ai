@@ -27,7 +27,11 @@ export async function exchangeCode(
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: params.toString(),
   });
-  if (!res.ok) throw new Error("Failed to exchange code");
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Google token exchange error:", errorText);
+    throw new Error("Failed to exchange code");
+  }
   const data = (await res.json()) as { refresh_token: string };
   return { refresh_token: data.refresh_token };
 }

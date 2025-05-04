@@ -1,8 +1,7 @@
-import { requireAuth } from "../../../../helpers/auth";
-import { listFiles, downloadAsMarkdown } from "../../../../helpers/google-drive";
-import { createDocument } from "../../../../models/document";
+import { requireAuth } from "../../../../../helpers/auth";
+import { listFiles, downloadAsMarkdown } from "../../../../../helpers/google-drive";
+import { createDocument } from "../../../../../models/document";
 import { nanoid } from "nanoid";
-import { findByToken } from "../../../../models/user";
 
 export const GET = async (request: Request, env: Env) => {
   try {

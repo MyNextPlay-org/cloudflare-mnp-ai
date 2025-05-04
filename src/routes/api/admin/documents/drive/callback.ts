@@ -14,6 +14,7 @@ export const GET = async (request: Request, env: Env) => {
     await markDriveConnected(env, user.email);
     return Response.redirect("/admin/documents", 302);
   } catch (err) {
+    console.error(err);
     return new Response("OAuth error", { status: 400 });
   }
 };
