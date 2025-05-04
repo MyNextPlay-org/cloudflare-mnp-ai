@@ -1,0 +1,76 @@
+<div x-data="adminDocuments">
+  <h1 class="text-2xl font-bold mb-4">Documents</h1>
+  <button @click="openAdd" class="btn btn-primary mb-2">Add Document</button>
+  <table class="table-auto w-full mb-4">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Created At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="doc in docs" :key="doc.id">
+        <tr>
+          <td x-text="doc.id"></td>
+          <td x-text="doc.title"></td>
+          <td x-text="doc.created_at"></td>
+          <td>
+            <button @click="openView(doc)" class="btn btn-sm">View</button>
+            <button @click="openDelete(doc)" class="btn btn-sm btn-danger">Delete</button>
+          </td>
+        </tr>
+      </template>
+    </tbody>
+  </table>
+  <!-- View Modal -->
+  <div x-show="showView" class="modal">
+    <div class="modal-content">
+      <h2>Document</h2>
+      <pre x-text="selectedDoc ? selectedDoc.content : ''"></pre>
+      <button @click="showView=false" class="btn">Close</button>
+    </div>
+  </div>
+  <!-- Delete Modal -->
+  <div x-show="showDelete" class="modal">
+    <div class="modal-content">
+      <h2>Delete Document?</h2>
+      <p>Are you sure you want to delete <span x-text="selectedDoc.title"></span>?</p>
+      <button @click="deleteDoc" class="btn btn-danger">Delete</button>
+      <button @click="showDelete=false" class="btn">Cancel</button>
+    </div>
+  </div>
+  <!-- Add Modal -->
+  <div x-show="showAdd" class="modal">
+    <div class="modal-content">
+      <h2>Add Document</h2>
+      <input x-model="newDocTitle" placeholder="Title" class="input mb-2" />
+      <textarea x-model="newDocContent" placeholder="Markdown content" class="input mb-2"></textarea>
+      <button @click="createDoc" class="btn btn-primary">Add</button>
+      <button @click="showAdd=false" class="btn">Cancel</button>
+    </div>
+  </div>
+  <!-- Google Drive Section -->
+  <div class="mt-8">
+    <template x-if="!connected">
+      <button @click="connectDrive" class="btn btn-secondary">Connect Google Drive</button>
+    </template>
+    <template x-if="connected">
+      <button @click="fetchDriveFiles" class="btn btn-secondary">Select Google Drive Files</button>
+      <div x-show="showDriveFiles" class="modal">
+        <div class="modal-content">
+          <h2>Import from Google Drive</h2>
+          <template x-for="file in driveFiles" :key="file.id">
+            <div>
+              <input type="checkbox" :value="file.id" x-model="selectedDriveFiles" />
+              <span x-text="file.name"></span>
+            </div>
+          </template>
+          <button @click="importDriveFiles" class="btn btn-primary">Import Selected</button>
+          <button @click="showDriveFiles=false" class="btn">Cancel</button>
+        </div>
+      </div>
+    </template>
+  </div>
+</div> 

@@ -1,3 +1,8 @@
+// Utility to convert kebab-case to camelCase
+function kebabToCamelCase(str: string): string {
+  return str.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+}
+
 const modules = import.meta.glob("../components/*/*.ts", { eager: true });
 
 Object.entries(modules).forEach(([filePath, mod]) => {
@@ -9,7 +14,8 @@ Object.entries(modules).forEach(([filePath, mod]) => {
   //    e.g. "../components/layout/layout.ts" → ["..","components","layout","layout.ts"]
   const segments = filePath.split("/");
   const name = segments[segments.length - 1].split(".")[0];
+  const camelName = kebabToCamelCase(name);
 
   // 3. register on window (or via Alpine.data)
-  (window as any)[name] = () => ({ ...component });
+  (window as any)[camelName] = () => ({ ...component });
 });

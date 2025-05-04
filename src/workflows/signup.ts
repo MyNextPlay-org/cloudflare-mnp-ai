@@ -15,13 +15,16 @@ export class SignupWorkflow extends WorkflowEntrypoint<Env, Params> {
     const token = crypto.randomUUID();
     const expires = new Date(Date.now() + 15 * 60e3).toISOString();
     await step.do("store magic token", async () => {
-      console.log(email, token, expires);
-      await upsertMagicToken(this.env, email, token, expires);
+      try {
+        await upsertMagicToken(this.env, email, token, expires);
+      } catch (err) {
+        console.error("[SignupWorkflow] Failed to store magic token:", err);
+        throw err;
+      }
     });
 
     // 2) Send email
     await step.do("send verification email", async () => {
-      // build the magic-link off of the passed origin
       const link = `${origin}/verify?token=${token}`;
       const resend = new Resend(this.env.RESEND_API_KEY);
       try {
@@ -32,7 +35,7 @@ export class SignupWorkflow extends WorkflowEntrypoint<Env, Params> {
           html: `<p>Click to verify: ${link}</p>`,
         });
       } catch (err) {
-        console.error("Failed to send verification email:", err);
+        console.error("[SignupWorkflow] Failed to send verification email:", err);
         throw err;
       }
     });

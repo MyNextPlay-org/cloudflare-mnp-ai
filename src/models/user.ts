@@ -8,6 +8,8 @@ export type User = {
   magic_token_expires_at: string | null;
   verified: boolean;
   registered: boolean;
+  drive_refresh_token: string | null;
+  drive_connected: boolean;
 };
 
 /** Find a verified user by email */
@@ -45,6 +47,7 @@ export async function upsertMagicToken(
       magic_token_expires_at: expiresAt,
       verified: false,
       registered: false,
+      drive_connected: false,
     })
     .onConflict((oc) =>
       oc.column("email").doUpdateSet({
@@ -85,4 +88,56 @@ export async function setRegisteredByEmail(env: Env, email: string): Promise<num
     .where("email", "=", email)
     .execute();
   return Number(result.numUpdatedRows);
+}
+
+/** Set Google Drive tokens for a user */
+export async function setDriveTokens(
+  env: Env,
+  email: string,
+  refreshToken: string,
+): Promise<number> {
+  const [result] = await getDb(env)
+    .updateTable("users")
+    .set({ drive_refresh_token: refreshToken })
+    .where("email", "=", email)
+    .execute();
+  return Number(result.numUpdatedRows);
+}
+
+/** Mark a user as connected to Google Drive */
+export async function markDriveConnected(env: Env, email: string): Promise<number> {
+  const [result] = await getDb(env)
+    .updateTable("users")
+    .set({ drive_connected: true })
+    .where("email", "=", email)
+    .execute();
+  return Number(result.numUpdatedRows);
+}
+
+/** List all users */
+export async function listUsers(env: Env): Promise<User[]> {
+  return getDb(env).selectFrom("users").selectAll().execute();
+}
+
+/** Create a new user */
+export async function createUser(env: Env, email: string): Promise<void> {
+  await getDb(env)
+    .insertInto("users")
+    .values({
+      email,
+      token: null,
+      magic_token: null,
+      magic_token_expires_at: null,
+      verified: false,
+      registered: false,
+      drive_refresh_token: null,
+      drive_connected: false,
+    })
+    .execute();
+}
+
+/** Delete a user by email */
+export async function deleteUser(env: Env, email: string): Promise<number> {
+  const [result] = await getDb(env).deleteFrom("users").where("email", "=", email).execute();
+  return Number(result.numDeletedRows);
 }

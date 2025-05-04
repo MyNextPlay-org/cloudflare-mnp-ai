@@ -1,0 +1,55 @@
+<div x-data="adminUsers">
+  <h1 class="text-2xl font-bold mb-4">Users</h1>
+  <button @click="openAdd" class="btn btn-primary mb-2">Add User</button>
+  <table class="table-auto w-full mb-4">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Verified</th>
+        <th>Registered</th>
+        <th>Drive Connected</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="u in users" :key="u.email">
+        <tr>
+          <td x-text="u.email"></td>
+          <td x-text="u.verified"></td>
+          <td x-text="u.registered"></td>
+          <td x-text="u.drive_connected"></td>
+          <td>
+            <button @click="view(u)" class="btn btn-sm">View</button>
+            <button @click="confirmDelete(u)" class="btn btn-sm btn-danger">Delete</button>
+          </td>
+        </tr>
+      </template>
+    </tbody>
+  </table>
+  <!-- View Modal -->
+  <div x-show="showView" class="modal">
+    <div class="modal-content">
+      <h2>User Details</h2>
+      <pre x-text="JSON.stringify(selectedUser, null, 2)"></pre>
+      <button @click="showView=false" class="btn">Close</button>
+    </div>
+  </div>
+  <!-- Delete Modal -->
+  <div x-show="showDelete" class="modal">
+    <div class="modal-content">
+      <h2>Delete User?</h2>
+      <p>Are you sure you want to delete <span x-text="selectedUser ? selectedUser.email : ''"></span>?</p>
+      <button @click="deleteUser" class="btn btn-danger">Delete</button>
+      <button @click="showDelete=false" class="btn">Cancel</button>
+    </div>
+  </div>
+  <!-- Add Modal -->
+  <div x-show="showAdd" class="modal">
+    <div class="modal-content">
+      <h2>Add User</h2>
+      <input x-model="newUserEmail" placeholder="Email" class="input mb-2" />
+      <button @click="createUser" class="btn btn-primary">Add</button>
+      <button @click="showAdd=false" class="btn">Cancel</button>
+    </div>
+  </div>
+</div> 

@@ -1,5 +1,5 @@
 import "./example.css";
-import { template } from "../../helpers/templates";
+import { html } from "@respond-run/html";
 
 export default {
   count: 0,
@@ -8,7 +8,10 @@ export default {
     this.count++;
   },
 
-  render() {
-    return template("example");
+  render: async function () {
+    const { default: exampleTemplate } = await import("./example.html?raw");
+    return html(exampleTemplate, {
+      /* pass your props here */
+    });
   },
 };

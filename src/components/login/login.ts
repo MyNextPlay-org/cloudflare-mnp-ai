@@ -1,8 +1,8 @@
 import "./login.css";
 import { handlePasskeyAuth } from "../../helpers/passkey-client";
-import { template } from "../../helpers/templates";
 import logo from "../../assets/logo.png";
 import passkey from "../../assets/passkey.svg";
+import { html } from "@respond-run/html";
 
 export default {
   email: "",
@@ -52,7 +52,8 @@ export default {
     }
   },
 
-  render() {
-    return template("login", { logo, passkey });
+  render: async function () {
+    const { default: loginTemplate } = await import("./login.html?raw");
+    return html(loginTemplate, { logo, passkey });
   },
 };
