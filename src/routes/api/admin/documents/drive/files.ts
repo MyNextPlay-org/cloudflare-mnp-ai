@@ -1,5 +1,9 @@
 import { requireAuth } from "../../../../../helpers/auth";
-import { listFiles, downloadAsMarkdown } from "../../../../../helpers/google-drive";
+import {
+  listFiles,
+  downloadAsMarkdown,
+  getFileMetadata,
+} from "../../../../../helpers/google-drive";
 import { createDocument } from "../../../../../models/document";
 import { nanoid } from "nanoid";
 
@@ -21,9 +25,10 @@ export const POST = async (request: Request, env: Env) => {
     const { fileIds } = (await request.json()) as { fileIds: string[] };
     for (const fileId of fileIds) {
       const content = await downloadAsMarkdown(env, fileId, user.drive_refresh_token);
+      const metadata = await getFileMetadata(env, fileId, user.drive_refresh_token);
       await createDocument(env, {
         id: nanoid(),
-        title: `Imported from Drive: ${fileId}`,
+        title: metadata.name,
         content,
         drive_file_id: fileId,
         drive_connected: true,

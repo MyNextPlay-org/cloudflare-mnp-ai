@@ -16,7 +16,7 @@
           <td x-text="doc.id"></td>
           <td x-text="doc.title"></td>
           <td x-text="doc.created_at"></td>
-          <td>
+          <td class="space-x-2">
             <button @click="openView(doc)" class="btn btn-sm">View</button>
             <button @click="openDelete(doc)" class="btn btn-sm btn-danger">Delete</button>
           </td>
@@ -36,7 +36,10 @@
   <div x-show="showDelete" class="modal">
     <div class="modal-content">
       <h2>Delete Document?</h2>
-      <p>Are you sure you want to delete <span x-text="selectedDoc.title"></span>?</p>
+      <p>
+        Are you sure you want to delete
+        <span x-text="selectedDoc ? selectedDoc.title : ''"></span>?
+      </p>
       <button @click="deleteDoc" class="btn btn-danger">Delete</button>
       <button @click="showDelete=false" class="btn">Cancel</button>
     </div>
@@ -57,20 +60,22 @@
       <button @click="connectDrive" class="btn btn-secondary">Connect Google Drive</button>
     </template>
     <template x-if="connected">
-      <button @click="fetchDriveFiles" class="btn btn-secondary">Select Google Drive Files</button>
-      <div x-show="showDriveFiles" class="modal">
-        <div class="modal-content">
-          <h2>Import from Google Drive</h2>
-          <template x-for="file in driveFiles" :key="file.id">
-            <div>
-              <input type="checkbox" :value="file.id" x-model="selectedDriveFiles" />
-              <span x-text="file.name"></span>
-            </div>
-          </template>
-          <button @click="importDriveFiles" class="btn btn-primary">Import Selected</button>
-          <button @click="showDriveFiles=false" class="btn">Cancel</button>
+      <div>
+        <button @click="fetchDriveFiles" class="btn btn-secondary">Select Google Drive Files</button>
+        <div x-show="showDriveFiles" class="modal">
+          <div class="modal-content">
+            <h2>Import from Google Drive</h2>
+            <template x-for="file in driveFiles" :key="file.id">
+              <div>
+                <input type="checkbox" :value="file.id" x-model="selectedDriveFiles" />
+                <span x-text="file.name"></span>
+              </div>
+            </template>
+            <button @click="importDriveFiles" class="btn btn-primary">Import Selected</button>
+            <button @click="showDriveFiles=false" class="btn">Cancel</button>
+          </div>
         </div>
       </div>
     </template>
   </div>
-</div> 
+</div>

@@ -86,3 +86,16 @@ export async function downloadAsMarkdown(
   if (!res.ok) throw new Error("Failed to download file as markdown");
   return await res.text();
 }
+
+export async function getFileMetadata(
+  env: Env,
+  fileId: string,
+  refreshToken: string,
+): Promise<{ name: string }> {
+  const accessToken = await getAccessToken(env, refreshToken);
+  const res = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?fields=name`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!res.ok) throw new Error("Failed to fetch file metadata");
+  return (await res.json()) as { name: string };
+}
