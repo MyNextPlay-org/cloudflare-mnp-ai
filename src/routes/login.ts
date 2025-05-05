@@ -1,20 +1,18 @@
 // src/routes/login.ts
 import login from "../components/login/login";
-import { getClientEntry } from "@respond-run/manifest";
 import { findByEmail } from "../models/user";
 import layout from "../components/layout/layout";
+import manifest from "../helpers/manifest";
 
 export const GET = async (_request: Request, env: Env, _ctx: ExecutionContext) => {
-  const { scriptPath, stylePath } = await getClientEntry((path) =>
-    env.ASSETS.fetch("https://worker" + path),
-  );
+  const { scriptPaths, stylePaths } = await manifest(env);
 
   return new Response(
     await layout.render({
       body: await login.render(),
       title: "Login",
-      scriptPath,
-      stylePath,
+      scriptPaths,
+      stylePaths,
     }),
     {
       headers: { "Content-Type": "text/html" },

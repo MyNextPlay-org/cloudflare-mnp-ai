@@ -1,24 +1,23 @@
 import { requireAuth } from "../../helpers/auth";
-import { getClientEntry } from "@respond-run/manifest";
 import layout from "../../components/layout/layout";
 import adminDocuments from "../../components/admin-documents/admin-documents";
+import manifest from "../../helpers/manifest";
 
 export const GET = async (request: Request, env: Env, _ctx: ExecutionContext) => {
   try {
     await requireAuth(request, env);
-    const { scriptPath, stylePath } = await getClientEntry((path) =>
-      env.ASSETS.fetch("https://worker" + path),
-    );
+    const { scriptPaths, stylePaths } = await manifest(env);
     return new Response(
       await layout.render({
         body: await adminDocuments.render(),
         title: "Admin – Documents",
-        scriptPath,
-        stylePath,
+        scriptPaths,
+        stylePaths,
       }),
       { headers: { "Content-Type": "text/html" } },
     );
   } catch {
-    return Response.redirect("/login", 302);
+    const url = new URL(request.url);
+    return Response.redirect(`${url.origin}/login`, 302);
   }
 };
