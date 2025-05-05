@@ -1,6 +1,6 @@
 import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from "cloudflare:workers";
 import { Resend } from "resend";
-import { upsertMagicToken } from "../models/user";
+import { upsertMagicToken } from "@/models/user";
 
 type Params = {
   email: string;

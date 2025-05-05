@@ -1,5 +1,5 @@
 import "./admin-users.css";
-import { User } from "../../models/user";
+import { User } from "@/models/user";
 import { html } from "@respond-run/html";
 
 export default {

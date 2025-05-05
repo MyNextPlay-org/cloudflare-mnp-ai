@@ -1,6 +1,6 @@
-import { requireAuth } from "../../../../../helpers/auth";
-import { exchangeCode } from "../../../../../helpers/google-drive";
-import { markDriveConnected, setDriveTokens } from "../../../../../models/user";
+import { requireAuth } from "@/helpers/auth";
+import { exchangeCode } from "@/helpers/google-drive";
+import { markDriveConnected, setDriveTokens } from "@/models/user";
 
 export const GET = async (request: Request, env: Env) => {
   try {

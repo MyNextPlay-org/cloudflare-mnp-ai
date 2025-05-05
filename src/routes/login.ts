@@ -1,8 +1,8 @@
 // src/routes/login.ts
-import login from "../components/login/login";
-import { findByEmail } from "../models/user";
-import layout from "../components/layout/layout";
-import manifest from "../helpers/manifest";
+import login from "@/components/login/login";
+import { findByEmail } from "@/models/user";
+import layout from "@/components/layout/layout";
+import manifest from "@/helpers/manifest";
 
 export const GET = async (_request: Request, env: Env, _ctx: ExecutionContext) => {
   const { scriptPaths, stylePaths } = await manifest(env);

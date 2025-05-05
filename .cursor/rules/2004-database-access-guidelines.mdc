@@ -61,7 +61,7 @@ alwaysApply: false
 * **Import ordering**
 
   1. External libs (`import { Kysely } from 'kysely';`)
-  2. Internal helpers (`import { getDb } from '../helpers/db';`)
+  2. Internal helpers (`import { getDb } from '@/helpers/db';`)
   3. Model types (`import { User } from './user';`)
 
 * **Testing**

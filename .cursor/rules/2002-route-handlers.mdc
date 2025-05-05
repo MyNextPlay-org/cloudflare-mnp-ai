@@ -19,9 +19,9 @@ alwaysApply: false
 - **Import ordering** (separate groups by a blank line, alphabetize within each):  
   1. Framework & router (e.g. `import { createRouter } from "@respond-run/router"`)  
   2. External libraries (e.g. `import { Resend } from "resend"` )  
-  3. Helpers & middleware (e.g. `import { getCorsHeaders } from "../helpers/cors"`)  
-  4. Models & workflows (e.g. `import { findByEmail } from "../models/user"`)  
-  5. UI/rendering (e.g. `import layout from "../components/layout/layout"`, `import { getClientEntry } from "@respond-run/manifest"`)
+  3. Helpers & middleware (e.g. `import { getCorsHeaders } from "@/helpers/cors"`)  
+  4. Models & workflows (e.g. `import { findByEmail } from "@/models/user"`)  
+  5. UI/rendering (e.g. `import layout from "@/components/layout/layout"`, `import { getClientEntry } from "@respond-run/manifest"`)
 
 - **HTML‐rendering handlers**  
   ```ts

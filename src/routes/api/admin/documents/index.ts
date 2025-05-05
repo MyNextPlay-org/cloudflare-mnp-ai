@@ -1,5 +1,5 @@
-import { requireAuth } from "../../../../helpers/auth";
-import { listDocuments, createDocument, deleteDocument } from "../../../../models/document";
+import { requireAuth } from "@/helpers/auth";
+import { listDocuments, createDocument, deleteDocument } from "@/models/document";
 import { nanoid } from "nanoid";
 
 export const GET = async (request: Request, env: Env) => {

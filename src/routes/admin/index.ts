@@ -1,4 +1,4 @@
-import { requireAuth } from "../../helpers/auth";
+import { requireAuth } from "@/helpers/auth";
 
 export const GET = async (request: Request, env: Env, _ctx: ExecutionContext) => {
   const url = new URL(request.url);

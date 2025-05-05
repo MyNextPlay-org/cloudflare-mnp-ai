@@ -1,5 +1,5 @@
-import { setTokenCookie } from "../helpers/cookies";
-import { findByMagicToken, verifyByMagicToken } from "../models/user";
+import { setTokenCookie } from "@/helpers/cookies";
+import { findByMagicToken, verifyByMagicToken } from "@/models/user";
 
 export const GET = async (request: Request, env: Env) => {
   const url = new URL(request.url);

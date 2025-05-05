@@ -1,10 +1,6 @@
-import { requireAuth } from "../../../../../helpers/auth";
-import {
-  listFiles,
-  downloadAsMarkdown,
-  getFileMetadata,
-} from "../../../../../helpers/google-drive";
-import { createDocument } from "../../../../../models/document";
+import { requireAuth } from "@/helpers/auth";
+import { listFiles, downloadAsMarkdown, getFileMetadata } from "@/helpers/google-drive";
+import { createDocument } from "@/models/document";
 import { nanoid } from "nanoid";
 
 export const GET = async (request: Request, env: Env) => {

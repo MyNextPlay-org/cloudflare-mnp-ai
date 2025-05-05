@@ -1,4 +1,4 @@
-import { getCookieDomain } from "../helpers/cookies";
+import { getCookieDomain } from "@/helpers/cookies";
 
 export const GET = async (request: Request, _env: Env): Promise<Response> => {
   const cookieDomain = getCookieDomain(request);

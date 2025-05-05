@@ -1,5 +1,5 @@
-import { requireAuth } from "../../../../../helpers/auth";
-import { getAuthUrl } from "../../../../../helpers/google-drive";
+import { requireAuth } from "@/helpers/auth";
+import { getAuthUrl } from "@/helpers/google-drive";
 
 export const GET = async (request: Request, env: Env) => {
   const url = new URL(request.url);

@@ -1,6 +1,6 @@
-import { getCorsHeaders } from "../../helpers/cors";
-import { getPasskeyApi } from "../../helpers/passkey-server";
-import { findByEmail } from "../../models/user";
+import { getCorsHeaders } from "@/helpers/cors";
+import { getPasskeyApi } from "@/helpers/passkey-server";
+import { findByEmail } from "@/models/user";
 
 interface RequestBody {
   email: string;

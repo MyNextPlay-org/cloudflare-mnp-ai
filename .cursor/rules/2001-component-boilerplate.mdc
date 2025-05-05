@@ -17,7 +17,7 @@ When adding a new component directory under `src/components`, follow this patter
 2. **my-widget.ts**  
    ```ts
    import "./my-widget.css";
-   import { template } from "../../helpers/templates";
+   import { template } from "@/helpers/templates";
 
    export default {
      // 1. State properties

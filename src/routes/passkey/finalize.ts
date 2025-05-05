@@ -1,7 +1,7 @@
-import { parseTokenCookie, setTokenCookie } from "../../helpers/cookies";
-import { getCorsHeaders } from "../../helpers/cors";
-import { getPasskeyApi } from "../../helpers/passkey-server";
-import { findByEmail, setRegisteredByEmail } from "../../models/user";
+import { parseTokenCookie, setTokenCookie } from "@/helpers/cookies";
+import { getCorsHeaders } from "@/helpers/cors";
+import { getPasskeyApi } from "@/helpers/passkey-server";
+import { findByEmail, setRegisteredByEmail } from "@/models/user";
 
 interface RequestBody {
   email: string;

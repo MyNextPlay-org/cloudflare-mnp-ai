@@ -1,6 +1,6 @@
-import { parseTokenCookie } from "../helpers/cookies";
-import { getCorsHeaders } from "../helpers/cors";
-import { findByToken } from "../models/user";
+import { parseTokenCookie } from "@/helpers/cookies";
+import { getCorsHeaders } from "@/helpers/cors";
+import { findByToken } from "@/models/user";
 
 export const OPTIONS = async (request: Request): Promise<Response> => {
   const cors = getCorsHeaders(request);

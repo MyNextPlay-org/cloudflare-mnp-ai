@@ -1,5 +1,5 @@
 import { parseTokenCookie } from "./cookies";
-import { findByToken } from "../models/user";
+import { findByToken } from "@/models/user";
 
 export async function requireAuth(request: Request, env: Env) {
   const token = parseTokenCookie(request);

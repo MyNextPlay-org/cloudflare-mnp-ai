@@ -1,7 +1,7 @@
-import { requireAuth } from "../../helpers/auth";
-import layout from "../../components/layout/layout";
-import adminUsers from "../../components/admin-users/admin-users";
-import manifest from "../../helpers/manifest";
+import { requireAuth } from "@/helpers/auth";
+import layout from "@/components/layout/layout";
+import adminUsers from "@/components/admin-users/admin-users";
+import manifest from "@/helpers/manifest";
 
 export const GET = async (request: Request, env: Env, _ctx: ExecutionContext) => {
   try {

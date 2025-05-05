@@ -1,5 +1,5 @@
-import { generateSecret } from "../helpers/crypto";
-import { getDb } from "../helpers/db";
+import { generateSecret } from "@/helpers/crypto";
+import { getDb } from "@/helpers/db";
 
 export type User = {
   email: string;

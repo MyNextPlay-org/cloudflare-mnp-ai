@@ -1,5 +1,5 @@
-import { requireAuth } from "../../../helpers/auth";
-import { listUsers, createUser, deleteUser } from "../../../models/user";
+import { requireAuth } from "@/helpers/auth";
+import { listUsers, createUser, deleteUser } from "@/models/user";
 
 export const GET = async (request: Request, env: Env) => {
   try {

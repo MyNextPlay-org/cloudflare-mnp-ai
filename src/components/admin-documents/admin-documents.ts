@@ -1,6 +1,6 @@
 import "./admin-documents.css";
-import { Document } from "../../models/document";
-import { DriveFile } from "../../helpers/google-drive";
+import { Document } from "@/models/document";
+import { DriveFile } from "@/helpers/google-drive";
 import { html } from "@respond-run/html";
 
 export default {

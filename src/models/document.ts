@@ -1,4 +1,4 @@
-import { getDb } from "../helpers/db";
+import { getDb } from "@/helpers/db";
 
 export type Document = {
   id: string;
