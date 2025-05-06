@@ -86,7 +86,6 @@ export default {
       }, 750);
     } catch (err) {
       console.error("Copy failed:", err);
-      // you could flash an error state here
     }
   },
   async init() {

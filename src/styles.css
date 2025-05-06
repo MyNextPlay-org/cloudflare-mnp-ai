@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 @layer base {
+  x-cloak {
+    display: none !important;
+  }
+
   :root {
     --color-background: 255 255 255;
     --color-foreground: 17 24 39;
