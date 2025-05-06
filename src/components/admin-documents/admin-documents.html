@@ -87,9 +87,12 @@
   </div>
 
   <!-- Google Drive Modal (same pattern) -->
-  <button x-show="!connected" @click="fetchDriveFiles" class="btn btn-secondary mb-2">Select Google Drive Files</button>
+  <template x-if="!connected">
+    <button @click="connectDrive" class="btn btn-secondary">Connect Google Drive</button>
+  </template>
   <template x-if="connected">
     <div>
+      <button @click="fetchDriveFiles" class="btn btn-secondary mb-2">Select Google Drive Files</button>
       <!-- Import from Google Drive -->
       <div x-show="showDriveFiles" x-cloak class="modal" @click.self="showDriveFiles = false" x-transition.opacity>
         <div class="modal-content relative" @click.stop x-transition.scale>
