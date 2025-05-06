@@ -5,6 +5,8 @@ import { html } from "@respond-run/html";
 
 export default {
   docs: [] as Document[],
+  showCopy: true,
+  copyText: "Copy",
   showView: false,
   showDelete: false,
   showAdd: false,
@@ -69,6 +71,23 @@ export default {
   async checkDriveConnected() {
     const res = await fetch("/api/admin/documents/drive/connected");
     this.connected = ((await res.json()) as { connected: boolean }).connected;
+  },
+  async copyContent() {
+    if (!this.selectedDoc) return;
+    try {
+      await navigator.clipboard.writeText(this.selectedDoc.content);
+
+      // hide “Copy”, show “Copied!”
+      this.showCopy = false;
+      this.copyText = "Copied!";
+      setTimeout(() => {
+        this.copyText = "Copy";
+        this.showCopy = true;
+      }, 750);
+    } catch (err) {
+      console.error("Copy failed:", err);
+      // you could flash an error state here
+    }
   },
   async init() {
     await this.fetchDocs();

@@ -1,6 +1,7 @@
-<div x-data="adminDocuments">
+<div x-data="adminDocuments" x-init="init()" class="px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8">
   <h1 class="text-2xl font-bold mb-4">Documents</h1>
   <button @click="openAdd" class="btn btn-primary mb-2">Add Document</button>
+
   <table class="table-auto w-full mb-4">
     <thead>
       <tr>
@@ -24,58 +25,96 @@
       </template>
     </tbody>
   </table>
-  <!-- View Modal -->
-  <div x-show="showView" class="modal">
-    <div class="modal-content">
-      <h2>Document</h2>
-      <pre x-text="selectedDoc ? selectedDoc.content : ''"></pre>
-      <button @click="showView=false" class="btn">Close</button>
+
+  <!-- View Document Modal -->
+  <div x-show="showView" x-cloak class="modal view-modal" @click.self="showView = false" @keydown.escape.window="showView = false" x-transition.opacity>
+    <div class="modal-content relative" @click.stop x-transition.scale>
+      <!-- close icon -->
+      <button @click="showView = false" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">&times;</button>
+
+      <!-- header -->
+      <div class="modal-header mb-4">
+        <h2 class="text-xl font-semibold" x-text="selectedDoc?.title"></h2>
+      </div>
+
+      <!-- body: raw markdown in scrollable <pre> -->
+      <div class="modal-body">
+        <pre x-text="selectedDoc?.content"></pre>
+      </div>
+
+      <!-- footer -->
+      <div class="modal-footer">
+        <button @click="copyContent()" class="btn btn-outline relative overflow-hidden min-w-16">
+          <!-- shows when showCopy is true -->
+          <span x-show="showCopy" x-text="copyText" x-transition:leave.opacity.duration.500ms>Copy</span>
+        </button>
+        <button @click="showView = false" class="btn">Close</button>
+      </div>
     </div>
   </div>
+
+
   <!-- Delete Modal -->
-  <div x-show="showDelete" class="modal">
-    <div class="modal-content">
-      <h2>Delete Document?</h2>
-      <p>
+  <div x-show="showDelete" x-cloak class="modal" @click.self="showDelete = false" x-transition.opacity>
+    <div class="modal-content relative" @click.stop x-transition.scale>
+      <button @click="showDelete = false" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Delete Document?</h2>
+      <p class="mb-4">
         Are you sure you want to delete
-        <span x-text="selectedDoc ? selectedDoc.title : ''"></span>?
+        <strong x-text="selectedDoc?.title"></strong>?
       </p>
-      <button @click="deleteDoc" class="btn btn-danger">Delete</button>
-      <button @click="showDelete=false" class="btn">Cancel</button>
+      <div class="flex justify-end space-x-2">
+        <button @click="deleteDoc" class="btn btn-danger">Delete</button>
+        <button @click="showDelete = false" class="btn">Cancel</button>
+      </div>
     </div>
   </div>
+
   <!-- Add Modal -->
-  <div x-show="showAdd" class="modal">
-    <div class="modal-content">
-      <h2>Add Document</h2>
-      <input x-model="newDocTitle" placeholder="Title" class="input mb-2" />
-      <textarea x-model="newDocContent" placeholder="Markdown content" class="input mb-2"></textarea>
-      <button @click="createDoc" class="btn btn-primary">Add</button>
-      <button @click="showAdd=false" class="btn">Cancel</button>
+  <div x-show="showAdd" x-cloak class="modal" @click.self="showAdd = false" x-transition.opacity>
+    <div class="modal-content relative" @click.stop x-transition.scale>
+      <button @click="showAdd = false" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Add Document</h2>
+      <form @submit.prevent="createDoc">
+        <input x-model="newDocTitle" placeholder="Title" class="input" required />
+        <textarea x-model="newDocContent" placeholder="Markdown content" class="input" rows="6" required></textarea>
+        <div class="flex justify-end space-x-2">
+          <button type="submit" class="btn btn-primary">Add</button>
+          <button type="button" @click="showAdd = false" class="btn">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
-  <!-- Google Drive Section -->
-  <div class="mt-8">
-    <template x-if="!connected">
-      <button @click="connectDrive" class="btn btn-secondary">Connect Google Drive</button>
-    </template>
-    <template x-if="connected">
-      <div>
-        <button @click="fetchDriveFiles" class="btn btn-secondary">Select Google Drive Files</button>
-        <div x-show="showDriveFiles" class="modal">
-          <div class="modal-content">
-            <h2>Import from Google Drive</h2>
+
+  <!-- Google Drive Modal (same pattern) -->
+  <template x-if="connected">
+    <div>
+      <button @click="fetchDriveFiles" class="btn btn-secondary mb-2">Select Google Drive Files</button>
+      <!-- Import from Google Drive -->
+      <div x-show="showDriveFiles" x-cloak class="modal" @click.self="showDriveFiles = false" x-transition.opacity>
+        <div class="modal-content relative" @click.stop x-transition.scale>
+          <button @click="showDriveFiles = false" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
+
+          <h2 class="text-xl font-semibold mb-4">Import from Google Drive</h2>
+
+          <!-- scrollable list -->
+          <div class="drive-file-list">
             <template x-for="file in driveFiles" :key="file.id">
-              <div>
+              <label class="drive-file-item cursor-pointer">
                 <input type="checkbox" :value="file.id" x-model="selectedDriveFiles" />
                 <span x-text="file.name"></span>
-              </div>
+              </label>
             </template>
-            <button @click="importDriveFiles" class="btn btn-primary">Import Selected</button>
-            <button @click="showDriveFiles=false" class="btn">Cancel</button>
+          </div>
+
+          <!-- footer -->
+          <div class="modal-footer">
+            <button @click="importDriveFiles" class="btn btn-primary">Import</button>
+            <button @click="showDriveFiles = false" class="btn">Cancel</button>
           </div>
         </div>
       </div>
-    </template>
-  </div>
+
+    </div>
+  </template>
 </div>

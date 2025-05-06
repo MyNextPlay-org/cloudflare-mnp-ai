@@ -1,6 +1,7 @@
-<div x-data="adminUsers">
+<div x-data="adminUsers" x-init="init()" class="px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8">
   <h1 class="text-2xl font-bold mb-4">Users</h1>
   <button @click="openAdd" class="btn btn-primary mb-2">Add User</button>
+
   <table class="table-auto w-full mb-4">
     <thead>
       <tr>
@@ -26,30 +27,47 @@
       </template>
     </tbody>
   </table>
+
   <!-- View Modal -->
-  <div x-show="showView" class="modal">
-    <div class="modal-content">
-      <h2>User Details</h2>
-      <pre x-text="JSON.stringify(selectedUser, null, 2)"></pre>
-      <button @click="showView=false" class="btn">Close</button>
+  <div x-show="showView" x-cloak class="modal" @click.self="showView = false" x-transition.opacity>
+    <div class="modal-content relative" @click.stop x-transition.scale>
+      <button @click="showView = false" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">User Details</h2>
+      <pre class="mb-4" x-text="JSON.stringify(selectedUser, null, 2)"></pre>
+      <div class="flex justify-end">
+        <button @click="showView = false" class="btn">Close</button>
+      </div>
     </div>
   </div>
+
   <!-- Delete Modal -->
-  <div x-show="showDelete" class="modal">
-    <div class="modal-content">
-      <h2>Delete User?</h2>
-      <p>Are you sure you want to delete <span x-text="selectedUser ? selectedUser.email : ''"></span>?</p>
-      <button @click="deleteUser" class="btn btn-danger">Delete</button>
-      <button @click="showDelete=false" class="btn">Cancel</button>
+  <div x-show="showDelete" x-cloak class="modal" @click.self="showDelete = false" x-transition.opacity>
+    <div class="modal-content relative" @click.stop x-transition.scale>
+      <button @click="showDelete = false" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Delete User?</h2>
+      <p class="mb-4">
+        Are you sure you want to delete
+        <strong x-text="selectedUser?.email"></strong>?
+      </p>
+      <div class="flex justify-end space-x-2">
+        <button @click="deleteUser" class="btn btn-danger">Delete</button>
+        <button @click="showDelete = false" class="btn">Cancel</button>
+      </div>
     </div>
   </div>
+
   <!-- Add Modal -->
-  <div x-show="showAdd" class="modal">
-    <div class="modal-content">
-      <h2>Add User</h2>
-      <input x-model="newUserEmail" placeholder="Email" class="input mb-2" />
-      <button @click="createUser" class="btn btn-primary">Add</button>
-      <button @click="showAdd=false" class="btn">Cancel</button>
+  <div x-show="showAdd" x-cloak class="modal" @click.self="showAdd = false" x-transition.opacity>
+    <div class="modal-content relative" @click.stop x-transition.scale>
+      <button @click="showAdd = false" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Add User</h2>
+      <form @submit.prevent="createUser">
+        <input x-model="newUserEmail" type="email" placeholder="Email" class="input" required />
+        <div class="flex justify-end space-x-2">
+          <button type="submit" class="btn btn-primary">Add</button>
+          <button type="button" @click="showAdd = false" class="btn">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
-</div> 
+</div>
