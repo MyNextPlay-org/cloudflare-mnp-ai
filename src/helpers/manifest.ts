@@ -14,7 +14,7 @@ export default async function manifest(env: Env) {
       stylePaths = stylePaths.concat(clientManifest.css);
     }
   } else {
-    scriptPaths.push("/src/client.ts");
+    scriptPaths.push("src/client.ts");
   }
 
   if (stylesManifest) {
