@@ -56,6 +56,7 @@ async function getAccessToken(env: Env, refreshToken: string): Promise<string> {
 export type DriveFile = {
   id: string;
   name: string;
+  modifiedTime: string;
   driveId: string;
 };
 
@@ -66,7 +67,7 @@ export async function listFiles(env: Env, refreshToken: string): Promise<DriveFi
       // show docs in My Drive or shared with you
       "corpora=allDrives&includeItemsFromAllDrives=true&" +
       "q=trashed=false and mimeType='application/vnd.google-apps.document'&" +
-      "fields=files(id,name)",
+      "fields=files(id,name,modifiedTime)",
     { headers: { Authorization: `Bearer ${accessToken}` } },
   );
   if (!res.ok) throw new Error("Failed to list files");
@@ -86,7 +87,7 @@ export async function listFilesInDrive(
   url.searchParams.set("includeItemsFromAllDrives", "true");
   url.searchParams.set("supportsAllDrives", "true");
   url.searchParams.set("q", "trashed=false and mimeType='application/vnd.google-apps.document'");
-  url.searchParams.set("fields", "files(id,name)");
+  url.searchParams.set("fields", "files(id,name,modifiedTime)");
   const res = await fetch(url.toString(), {
     headers: {
       Authorization: `Bearer ${accessToken}`,

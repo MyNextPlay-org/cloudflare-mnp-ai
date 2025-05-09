@@ -7,6 +7,7 @@ export type Document = {
   created_at: string;
   drive_file_id: string | null;
   drive_id: string | null;
+  drive_file_modified_at: string | null;
 };
 
 export async function listDocuments(env: Env): Promise<Document[]> {

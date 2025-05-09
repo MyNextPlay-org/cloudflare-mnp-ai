@@ -3,6 +3,7 @@ import { listFilesInDrive, downloadAsMarkdown } from "@/helpers/google-drive";
 import { getUserDrive, updateUserDrive } from "@/models/user-drive";
 import { createDocument } from "@/models/document";
 import { getUser } from "@/models/user";
+import { getDb } from "@/helpers/db";
 
 export const POST = async (
   request: Request,
@@ -39,16 +40,41 @@ export const POST = async (
         userDrive.drive_id,
       );
 
-      // Download and create documents
+      // Download and create/update documents
       for (const file of driveFiles) {
-        const content = await downloadAsMarkdown(env, file.id, userRecord.drive_refresh_token);
-        await createDocument(env, {
-          id: crypto.randomUUID(),
-          title: file.name,
-          content,
-          drive_file_id: file.id,
-          drive_id: userDrive.drive_id,
-        });
+        const existing = await getDb(env)
+          .selectFrom("documents")
+          .selectAll()
+          .where("drive_file_id", "=", file.id)
+          .executeTakeFirst();
+
+        if (existing) {
+          // Skip if nothing has changed since last import
+          if (existing.drive_file_modified_at === file.modifiedTime) continue;
+
+          // Download and update if modified
+          const content = await downloadAsMarkdown(env, file.id, userRecord.drive_refresh_token);
+          await getDb(env)
+            .updateTable("documents")
+            .set({
+              title: file.name,
+              content,
+              drive_file_modified_at: file.modifiedTime,
+            })
+            .where("drive_file_id", "=", file.id)
+            .execute();
+        } else {
+          // Create new document
+          const content = await downloadAsMarkdown(env, file.id, userRecord.drive_refresh_token);
+          await createDocument(env, {
+            id: crypto.randomUUID(),
+            title: file.name,
+            content,
+            drive_file_id: file.id,
+            drive_id: userDrive.drive_id,
+            drive_file_modified_at: file.modifiedTime,
+          });
+        }
       }
 
       // Update drive metadata

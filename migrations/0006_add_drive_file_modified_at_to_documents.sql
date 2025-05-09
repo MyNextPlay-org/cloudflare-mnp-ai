@@ -1,0 +1,1 @@
+ALTER TABLE documents ADD COLUMN drive_file_modified_at TEXT; 
