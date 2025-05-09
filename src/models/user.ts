@@ -141,3 +141,8 @@ export async function deleteUser(env: Env, email: string): Promise<number> {
   const [result] = await getDb(env).deleteFrom("users").where("email", "=", email).execute();
   return Number(result.numDeletedRows);
 }
+
+export async function getUser(env: Env, email: string): Promise<User | null> {
+  const user = await env.DB.prepare("SELECT * FROM users WHERE email = ?").bind(email).first();
+  return user as User | null;
+}

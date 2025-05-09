@@ -53,7 +53,6 @@
     </div>
   </div>
 
-
   <!-- Delete Modal -->
   <div x-show="showDelete" x-cloak class="modal" @click.self="showDelete = false" x-transition.opacity>
     <div class="modal-content relative" @click.stop x-transition.scale>
@@ -85,39 +84,4 @@
       </form>
     </div>
   </div>
-
-  <!-- Google Drive Modal (same pattern) -->
-  <template x-if="!connected">
-    <button @click="connectDrive" class="btn btn-secondary">Connect Google Drive</button>
-  </template>
-  <template x-if="connected">
-    <div>
-      <button @click="fetchDriveFiles" class="btn btn-secondary mb-2">Select Google Drive Files</button>
-      <!-- Import from Google Drive -->
-      <div x-show="showDriveFiles" x-cloak class="modal" @click.self="showDriveFiles = false" x-transition.opacity>
-        <div class="modal-content relative" @click.stop x-transition.scale>
-          <button @click="showDriveFiles = false" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
-
-          <h2 class="text-xl font-semibold mb-4">Import from Google Drive</h2>
-
-          <!-- scrollable list -->
-          <div class="drive-file-list">
-            <template x-for="file in driveFiles" :key="file.id">
-              <label class="drive-file-item cursor-pointer">
-                <input type="checkbox" :value="file.id" x-model="selectedDriveFiles" />
-                <span x-text="file.name"></span>
-              </label>
-            </template>
-          </div>
-
-          <!-- footer -->
-          <div class="modal-footer">
-            <button @click="importDriveFiles" class="btn btn-primary">Import</button>
-            <button @click="showDriveFiles = false" class="btn">Cancel</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </template>
 </div>

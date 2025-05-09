@@ -6,7 +6,7 @@ export type Document = {
   content: string;
   created_at: string;
   drive_file_id: string | null;
-  drive_connected: boolean;
+  drive_id: string | null;
 };
 
 export async function listDocuments(env: Env): Promise<Document[]> {
