@@ -45,5 +45,14 @@
       "name": "SEND_EMAIL",
       "destination_address": "template@dropsite.dev"
     }
-  ]
+  ],
+  "vectorize": [
+    {
+      "binding": "VECTORIZE",
+      "index_name": "docs-index"
+    }
+  ],
+  "ai": {
+    "binding": "AI"
+  }
 }
