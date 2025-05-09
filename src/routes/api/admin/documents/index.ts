@@ -21,7 +21,8 @@ export const POST = async (request: Request, env: Env) => {
       title,
       content,
       drive_file_id: null,
-      drive_connected: false,
+      drive_id: null,
+      drive_file_modified_at: null,
     });
     return new Response("{}", { headers: { "Content-Type": "application/json" } });
   } catch {

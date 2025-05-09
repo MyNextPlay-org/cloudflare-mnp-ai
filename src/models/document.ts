@@ -32,3 +32,19 @@ export async function deleteDocument(env: Env, id: string): Promise<number> {
   const [result] = await getDb(env).deleteFrom("documents").where("id", "=", id).execute();
   return Number(result.numDeletedRows);
 }
+
+export async function updateDocumentByDriveFileId(
+  env: Env,
+  driveFileId: string,
+  updates: {
+    title: string;
+    content: string;
+    drive_file_modified_at: string;
+  },
+): Promise<void> {
+  await getDb(env)
+    .updateTable("documents")
+    .set(updates)
+    .where("drive_file_id", "=", driveFileId)
+    .execute();
+}

@@ -1,7 +1,7 @@
 import { requireAuth } from "@/helpers/auth";
 import { listFilesInDrive, downloadAsMarkdown } from "@/helpers/google-drive";
 import { getUserDrive, updateUserDrive } from "@/models/user-drive";
-import { createDocument } from "@/models/document";
+import { createDocument, updateDocumentByDriveFileId } from "@/models/document";
 import { getUser } from "@/models/user";
 import { getDb } from "@/helpers/db";
 
@@ -54,15 +54,11 @@ export const POST = async (
 
           // Download and update if modified
           const content = await downloadAsMarkdown(env, file.id, userRecord.drive_refresh_token);
-          await getDb(env)
-            .updateTable("documents")
-            .set({
-              title: file.name,
-              content,
-              drive_file_modified_at: file.modifiedTime,
-            })
-            .where("drive_file_id", "=", file.id)
-            .execute();
+          await updateDocumentByDriveFileId(env, file.id, {
+            title: file.name,
+            content,
+            drive_file_modified_at: file.modifiedTime,
+          });
         } else {
           // Create new document
           const content = await downloadAsMarkdown(env, file.id, userRecord.drive_refresh_token);
