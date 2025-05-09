@@ -1,0 +1,36 @@
+<div x-data="adminSearch()" x-init="init()" class="px-4 py-6">
+  <h1 class="text-2xl font-bold mb-4">Search Documents</h1>
+
+  <div class="flex mb-4">
+    <input
+      x-model="query"
+      @keyup.enter="search()"
+      placeholder="Enter search terms…"
+      class="input flex-1 mr-2"
+    />
+    <button @click="search()" class="btn btn-primary">Search</button>
+  </div>
+
+  <template x-if="matches.length">
+    <table class="table-auto w-full mb-4">
+      <thead>
+        <tr><th>ID</th><th>Score</th><th>Metadata</th></tr>
+      </thead>
+      <tbody>
+        <template x-for="m in matches" :key="m.id">
+          <tr>
+            <td x-text="m.id"></td>
+            <td x-text="m.score.toFixed(4)"></td>
+            <td>
+              <pre class="whitespace-normal text-xs" x-text="JSON.stringify(m.metadata, null, 2)"></pre>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </template>
+
+  <p x-show="searched && !matches.length" class="text-muted">
+    No matches for "<span x-text="query"></span>".
+  </p>
+</div> 
