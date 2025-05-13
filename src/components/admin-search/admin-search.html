@@ -12,22 +12,23 @@
   </div>
 
   <template x-if="matches.length">
-    <table class="table-auto w-full mb-4">
-      <thead>
-        <tr><th>ID</th><th>Score</th><th>Metadata</th></tr>
-      </thead>
-      <tbody>
-        <template x-for="m in matches" :key="m.id">
-          <tr>
-            <td x-text="m.id"></td>
-            <td x-text="m.score.toFixed(4)"></td>
-            <td>
-              <pre class="whitespace-normal text-xs" x-text="JSON.stringify(m.metadata, null, 2)"></pre>
-            </td>
-          </tr>
-        </template>
-      </tbody>
-    </table>
+    <div class="space-y-4">
+      <template x-for="m in matches" :key="m.id">
+        <div class="border rounded p-4">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-lg font-semibold" x-text="m.title"></h3>
+            <span class="text-sm text-gray-500" x-text="'Score: ' + m.score.toFixed(4)"></span>
+          </div>
+          <div class="text-sm text-gray-600 mb-2" x-text="m.content"></div>
+          <div class="text-xs text-gray-500">
+            <div>ID: <span x-text="m.id"></span></div>
+            <div x-show="m.drive_file_id">Drive File ID: <span x-text="m.drive_file_id"></span></div>
+            <div x-show="m.drive_id">Drive ID: <span x-text="m.drive_id"></span></div>
+            <div>Created: <span x-text="new Date(m.created_at).toLocaleString()"></span></div>
+          </div>
+        </div>
+      </template>
+    </div>
   </template>
 
   <p x-show="searched && !matches.length" class="text-muted">

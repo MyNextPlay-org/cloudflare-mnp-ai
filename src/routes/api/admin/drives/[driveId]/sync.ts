@@ -40,6 +40,8 @@ export const POST = async (
         userDrive.drive_id,
       );
 
+      console.log("Found files in drive:", driveFiles.length);
+
       // Download and create/update documents
       for (const file of driveFiles) {
         const existing = await getDb(env)
@@ -50,10 +52,14 @@ export const POST = async (
 
         if (existing) {
           // Skip if nothing has changed since last import
-          if (existing.drive_file_modified_at === file.modifiedTime) continue;
+          if (existing.drive_file_modified_at === file.modifiedTime) {
+            console.log("Skipping unchanged file:", file.name);
+            continue;
+          }
 
           // Download and update if modified
           const content = await downloadAsMarkdown(env, file.id, userRecord.drive_refresh_token);
+          console.log("Updating file:", file.name, "Content length:", content.length);
           await updateDocumentByDriveFileId(env, file.id, {
             title: file.name,
             content,
@@ -62,6 +68,7 @@ export const POST = async (
         } else {
           // Create new document
           const content = await downloadAsMarkdown(env, file.id, userRecord.drive_refresh_token);
+          console.log("Creating new file:", file.name, "Content length:", content.length);
           await createDocument(env, {
             id: crypto.randomUUID(),
             title: file.name,
@@ -79,33 +86,58 @@ export const POST = async (
         last_synced_at: new Date().toISOString(),
       });
 
-      return new Response(JSON.stringify({ success: true }), {
+      // Get Vectorize index status
+      try {
+        const indexInfo = await env.VECTORIZE.describe();
+        console.log("Raw Vectorize index info:", indexInfo);
+
+        // Check if we have any vectors in the index
+        const testQuery = await env.VECTORIZE.query(new Array(1024).fill(0), {
+          topK: 1,
+          returnValues: false,
+          returnMetadata: "none",
+        });
+        console.log("Test query results:", testQuery);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            vectorizeStatus: {
+              vectorsCount: indexInfo.vectorsCount,
+              lastProcessedAt: new Date().toISOString(),
+              config: indexInfo.config,
+              testQueryCount: testQuery.count,
+            },
+          }),
+          {
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      } catch (vectorizeErr) {
+        console.error("Vectorize status check failed:", vectorizeErr);
+        return new Response(
+          JSON.stringify({
+            success: true,
+            vectorizeError:
+              vectorizeErr instanceof Error ? vectorizeErr.message : String(vectorizeErr),
+          }),
+          {
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+    } catch (err) {
+      console.error("Drive sync error:", err);
+      return new Response(JSON.stringify({ error: "Failed to sync drive" }), {
+        status: 500,
         headers: { "Content-Type": "application/json" },
       });
-    } catch (error) {
-      console.error("Error syncing drive:", error);
-      return new Response(
-        JSON.stringify({
-          error: "Failed to sync drive",
-          details: error instanceof Error ? error.message : String(error),
-        }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
     }
-  } catch (error) {
-    console.error("Auth error:", error);
-    return new Response(
-      JSON.stringify({
-        error: "Authentication failed",
-        details: error instanceof Error ? error.message : String(error),
-      }),
-      {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+  } catch (err) {
+    console.error(err);
+    return new Response(JSON.stringify({ error: "Unauthorized or bad request" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };

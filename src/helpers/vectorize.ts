@@ -6,12 +6,22 @@ export async function indexDocument(
   metadata: Record<string, any>,
   env: Env,
 ) {
-  const resp = await env.AI.run("@cf/baai/bge-base-en-v1.5", { text: [text] });
+  console.log("Indexing document:", {
+    id,
+    textLength: text.length,
+    metadata,
+  });
+
+  const resp = await env.AI.run("@cf/baai/bge-large-en-v1.5", { text: [text] });
   const values = resp.data[0];
+  console.log("Generated embedding vector of length:", values.length);
+
   const vector: VectorizeVector = { id, values, metadata };
-  await env.VECTORIZE.upsert([vector]);
+  const result = await env.VECTORIZE.upsert([vector]);
+  console.log("Vectorize upsert result:", result);
 }
 
 export async function deleteDocumentVector(id: string, env: Env) {
-  await env.VECTORIZE.deleteByIds([id]);
+  const result = await env.VECTORIZE.deleteByIds([id]);
+  console.log("Vectorize delete result:", result);
 }

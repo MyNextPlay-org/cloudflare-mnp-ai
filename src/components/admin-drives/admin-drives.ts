@@ -10,6 +10,19 @@ type UserDrive = {
   last_synced_at: string | null;
 };
 
+type SyncResponse = {
+  success: boolean;
+  vectorizeStatus?: {
+    vectorsCount: number;
+    lastProcessedAt: string;
+    config: {
+      dimensions: number;
+      metric: string;
+    };
+  };
+  error?: string;
+};
+
 export default {
   drives: [] as UserDrive[],
   availableDrives: [] as Drive[],
@@ -18,6 +31,8 @@ export default {
   selectedDrive: null as UserDrive | null,
   selectedDriveIds: [] as string[],
   connected: false,
+  syncing: false,
+  error: null as string | null,
 
   async checkDriveConnected() {
     const res = await fetch("/api/admin/drives/connected");
@@ -30,7 +45,7 @@ export default {
     this.showSelect = true;
   },
 
-  async fetchUserDrives() {
+  async fetchDrives() {
     const res = await fetch("/api/admin/drives");
     this.drives = await res.json();
   },
@@ -42,14 +57,43 @@ export default {
       body: JSON.stringify({ driveIds: this.selectedDriveIds }),
     });
     this.showSelect = false;
-    await this.fetchUserDrives();
+    await this.fetchDrives();
   },
 
   async syncDrive(driveId: string) {
-    await fetch(`/api/admin/drives/${encodeURIComponent(driveId)}/sync`, {
-      method: "POST",
-    });
-    await this.fetchUserDrives();
+    this.syncing = true;
+    this.error = null;
+    try {
+      const res = await fetch(`/api/admin/drives/${driveId}/sync`, {
+        method: "POST",
+      });
+      if (!res.ok) {
+        const data = (await res.json()) as SyncResponse;
+        throw new Error(data.error || "Failed to sync drive");
+      }
+      const data = (await res.json()) as SyncResponse;
+
+      // Log detailed Vectorize status
+      console.log("Drive sync completed. Vectorize status:", {
+        success: data.success,
+        vectorCount: data.vectorizeStatus?.vectorsCount,
+        lastProcessed: data.vectorizeStatus?.lastProcessedAt,
+        config: data.vectorizeStatus?.config,
+      });
+
+      // Notify search component about sync completion
+      const searchComponent = document.querySelector("[x-data='adminSearch()']") as any;
+      if (searchComponent && searchComponent.__x) {
+        searchComponent.__x.$data.onSyncComplete();
+      }
+
+      await this.fetchDrives();
+    } catch (err) {
+      console.error("Sync error:", err);
+      this.error = err instanceof Error ? err.message : String(err);
+    } finally {
+      this.syncing = false;
+    }
   },
 
   openRemove(drive: UserDrive) {
@@ -63,7 +107,7 @@ export default {
       method: "DELETE",
     });
     this.showRemove = false;
-    await this.fetchUserDrives();
+    await this.fetchDrives();
   },
 
   connectDrive() {
@@ -72,13 +116,11 @@ export default {
 
   async init() {
     await this.checkDriveConnected();
-    await this.fetchUserDrives();
+    await this.fetchDrives();
   },
 
   render: async function () {
     const { default: adminDrivesTemplate } = await import("./admin-drives.html?raw");
-    return html(adminDrivesTemplate, {
-      /* pass your props here */
-    });
+    return html(adminDrivesTemplate, {});
   },
 };

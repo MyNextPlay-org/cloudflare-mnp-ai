@@ -6,6 +6,15 @@ export const GET = async (request: Request, env: Env) => {
   try {
     await requireAuth(request, env);
     const docs = await listDocuments(env);
+    console.log(
+      "Found documents in database:",
+      docs.map((d) => ({
+        id: d.id,
+        title: d.title,
+        contentLength: d.content.length,
+        drive_file_id: d.drive_file_id,
+      })),
+    );
     return new Response(JSON.stringify(docs), { headers: { "Content-Type": "application/json" } });
   } catch {
     return new Response("Unauthorized", { status: 401 });
