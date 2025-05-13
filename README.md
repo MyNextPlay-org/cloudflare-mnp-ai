@@ -150,12 +150,11 @@ This starts:
 
 - Vite frontend
 - Cloudflare Worker with:
-
   - Local D1
   - Live reload
   - `.dev.vars` autoloaded
 
-In development, D1 and Workflows run locally. Vectorize and AI run remotely.
+In development, Workers, D1, and Workflows run locally. Vectorize and AI run remotely.
 
 ---
 
