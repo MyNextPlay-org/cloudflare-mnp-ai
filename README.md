@@ -44,8 +44,6 @@ GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
-> You **do not** need to run `source .dev.vars`. The dev server automatically loads it.
-
 ---
 
 ## ☁️ Set up Cloudflare Resources
