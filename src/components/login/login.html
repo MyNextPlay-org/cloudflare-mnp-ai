@@ -1,5 +1,5 @@
 <div x-data="login()" class="flex flex-col items-center justify-center min-h-screen -mt-6" x-init="init()">
-  <a href="/"><img class="w-50 mb-8" src="$.logo" alt="Respond" /></a>
+  <a href="/"><img class="w-50 mb-8 dark:filter dark:invert dark:brightness-0" src="$.logo" alt="Respond" /></a>
   <div class="flex flex-col items-center justify-center space-y-2">
     <input x-model="email" type="email" name="email" placeholder="Enter your email" class="placeholder-gray-500 text-center w-60 form-input box-border resize-none overflow-auto h-10 bg-white border-slate-300 border-1 focus:bg-white focus:border-slate-400 rounded" />
     <div x-cloak x-show="error" x-text="error" class="text-sm text-red-800 font-bold"></div>

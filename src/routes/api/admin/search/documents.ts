@@ -32,7 +32,6 @@ export const POST = async (request: Request, env: Env) => {
       env,
       matches.map((m) => m.id),
     );
-    console.log("Found documents in database:", docs.length);
 
     // 6) Combine document data with search scores
     const results = docs.map((doc) => {
@@ -43,16 +42,6 @@ export const POST = async (request: Request, env: Env) => {
         metadata: match?.metadata,
       };
     });
-
-    // Log the final results
-    console.log(
-      "Final search results:",
-      results.map((r) => ({
-        id: r.id,
-        title: r.title,
-        score: r.score,
-      })),
-    );
 
     return new Response(JSON.stringify({ matches: results }), {
       headers: { "Content-Type": "application/json" },
