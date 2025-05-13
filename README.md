@@ -10,7 +10,7 @@ A full-stack starter for building next-gen Cloudflare Workers apps using:
 - 📂 **Google Drive OAuth**
 - 🗝️ **GitHub OAuth**
 
-Zero-config local development. Automatic deploys via Cloudflare GitHub integration. First-class support for Workflows, background jobs, and structured AI features.
+All-in-one local development. Automatic deploys via Cloudflare GitHub integration. First-class support for Workflows, background jobs, and structured AI features.
 
 ---
 
