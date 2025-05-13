@@ -26,6 +26,44 @@ npm ci
 
 ---
 
+## 🔑 External Integrations
+
+External keys must be added to both `.dev.vars` (for development) and via `wrangler secret put` (for production).
+
+### Hanko (Passkeys)
+
+1. Go to [hanko.io](https://hanko.io) and create a tenant
+2. Copy:
+
+   - `Tenant ID` → `PASSKEYS_TENANT_ID`
+   - `Secret API Key` → `PASSKEYS_SECRET_API_KEY`
+
+3. Add both to `.dev.vars` and set them as secrets
+
+### Google OAuth (Drive)
+
+1. In the [Google Cloud Console](https://console.cloud.google.com):
+
+   - Enable the **Google Drive API**
+   - Create OAuth 2.0 Web credentials
+
+2. Set the redirect URI to:
+
+   ```
+   https://yourdomain.com/auth/google/callback
+   ```
+
+3. Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` to `.dev.vars` and set them as secrets
+
+### Resend (Email)
+
+1. Go to [resend.com](https://resend.com)
+2. Create an account and generate your `RESEND_API_KEY`
+3. Set up a verified sender domain (e.g. `hello@yourdomain.com`)
+4. Add the key to `.dev.vars` and set it as a secret
+
+---
+
 ## 🔧 Configure Credentials
 
 ### 2. Set up `.dev.vars`
@@ -34,7 +72,7 @@ npm ci
 cp .dev.vars.example .dev.vars
 ```
 
-Fill in:
+Fill in the following values:
 
 ```env
 PASSKEYS_TENANT_ID=your-hanko-tenant-id
@@ -44,56 +82,7 @@ GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
----
-
-## ☁️ Set up Cloudflare Resources
-
-> These only need to be created once.
-
-### 3. Authenticate
-
-```bash
-npx wrangler login
-```
-
-### 4. Create & migrate D1
-
-#### Create remote D1:
-
-```bash
-npx wrangler d1 create template
-```
-
-Copy the `database_id` into `wrangler.jsonc`.
-
-#### Local D1:
-
-No setup required — the dev server will automatically use and manage a local SQLite-compatible DB.
-
-To create and apply migrations:
-
-```bash
-npx wrangler d1 migrations create template init
-npx wrangler d1 migrations apply template --local
-npx wrangler d1 migrations apply template --remote
-```
-
-To view migrations:
-
-```bash
-npx wrangler d1 migrations list template --local
-npx wrangler d1 migrations list template --remote
-```
-
-### 5. Create vector index
-
-```bash
-npx wrangler vectorize create [db-name] --dimensions=1024 --metric=cosine
-```
-
-Ensure the name matches `index_name` in the `VECTORIZE` binding in `wrangler.jsonc`.
-
-### 6. Set secrets
+### 3. Set secrets for production
 
 ```bash
 npx wrangler secret put PASSKEYS_TENANT_ID
@@ -103,45 +92,51 @@ npx wrangler secret put GOOGLE_CLIENT_ID
 npx wrangler secret put GOOGLE_CLIENT_SECRET
 ```
 
-### 7. Set up email (Resend)
-
-In Cloudflare Dashboard:
-
-1. Go to **Email > Integrations**
-2. Add **Resend**
-3. Paste your `RESEND_API_KEY`
-4. Set a sender like `hello@yourdomain.com`
-
-Confirm the `"send_email"` block in `wrangler.jsonc` matches.
-
 ---
 
-## 🔑 External Integrations
+## ☁️ Set up Cloudflare Resources
 
-### Hanko (Passkeys)
+> These only need to be created once.
 
-1. Go to [hanko.io](https://hanko.io) → Create Tenant
-2. Copy:
+### 4. Authenticate with Cloudflare
 
-   - `Tenant ID` → `PASSKEYS_TENANT_ID`
-   - `Secret API Key` → `PASSKEYS_SECRET_API_KEY`
+```bash
+npx wrangler login
+```
 
-3. Add to `.dev.vars` and as secrets
+### 5. Create and migrate D1
 
-### Google OAuth (Drive)
+#### Remote D1
 
-1. In [Google Cloud Console](https://console.cloud.google.com):
+```bash
+npx wrangler d1 create template
+```
 
-   - Enable **Drive API**
-   - Create OAuth 2.0 Web credentials
+Copy the `database_id`, `database_name`, and update the `d1_databases` entry in `wrangler.jsonc`.
 
-2. Set redirect URI:
+##### Apply Migrations
 
-   ```
-   https://yourdomain.com/auth/google/callback
-   ```
+```bash
+npx wrangler d1 migrations apply template --remote
+```
 
-3. Add credentials to `.dev.vars` and set as secrets
+#### Local D1
+
+No setup required — the dev server will automatically use a local SQLite-compatible D1 instance.
+
+##### Apply Migrations
+
+```bash
+npx wrangler d1 migrations apply template --local
+```
+
+### 6. Create a Vectorize index
+
+```bash
+npx wrangler vectorize create [index-name] --dimensions=1024 --metric=cosine
+```
+
+Update the `vectorize` section in `wrangler.jsonc` with the new `index_name`.
 
 ---
 
@@ -156,11 +151,11 @@ This starts:
 - Vite frontend
 - Cloudflare Worker with:
 
-  - local D1
-  - live reload
+  - Local D1
+  - Live reload
   - `.dev.vars` autoloaded
 
-No extra steps required.
+In development, D1 and Workflows run locally. Vectorize and AI run remotely.
 
 ---
 
@@ -190,11 +185,10 @@ Deployment is automatic via Cloudflare's GitHub integration:
 
 - [ ] Clone and install dependencies
 - [ ] Connect repo to Cloudflare via GitHub
-- [ ] Create D1 database (local + remote)
+- [ ] Configure Hanko, Google OAuth, and Resend
+- [ ] Set `.dev.vars` and Wrangler secrets
+- [ ] Create D1 database (remote only)
 - [ ] Create Vectorize index
-- [ ] Add D1 and Vectorize IDs to `wrangler.jsonc`
+- [ ] Update bindings in `wrangler.jsonc`
 - [ ] Run migrations (local + remote)
-- [ ] Set Cloudflare secrets
-- [ ] Configure Resend and Hanko
-- [ ] Set Google OAuth redirect URI
 - [ ] Run `npm run dev` to start building
