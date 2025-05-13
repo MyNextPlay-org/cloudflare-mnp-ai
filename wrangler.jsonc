@@ -40,12 +40,6 @@
       "class_name": "SignupWorkflow"
     }
   ],
-  "send_email": [
-    {
-      "name": "SEND_EMAIL",
-      "destination_address": "template@dropsite.dev"
-    }
-  ],
   "vectorize": [
     {
       "binding": "VECTORIZE",
