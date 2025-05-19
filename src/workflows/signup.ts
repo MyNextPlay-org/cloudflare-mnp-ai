@@ -29,7 +29,7 @@ export class SignupWorkflow extends WorkflowEntrypoint<Env, Params> {
       const resend = new Resend(this.env.RESEND_API_KEY);
       try {
         await resend.emails.send({
-          from: "no-reply@dropsite.dev",
+          from: "no-reply@mynextplay.ai",
           to: email,
           subject: "Verify your email",
           html: `<p>Click to verify: ${link}</p>`,
