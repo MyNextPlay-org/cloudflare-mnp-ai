@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "cloudflare-template",
+	"name": "cloudflare-mnp-ai",
 	"main": "src/server.ts",
 	"compatibility_date": "2024-09-26",
 	"compatibility_flags": [
@@ -23,13 +23,13 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "template",
-			"database_id": "7ecd3c04-07d2-4c5a-91d3-ee5e5c5046c8"
+			"database_name": "mnp-ai",
+			"database_id": "cc938080-6f3a-449a-a254-4550593287ed"
 		}
 	],
 	"routes": [
 		{
-			"pattern": "template.dropsite.dev",
+			"pattern": "mynextplay.ai",
 			"custom_domain": true
 		}
 	],
@@ -43,7 +43,7 @@
   "vectorize": [
     {
       "binding": "VECTORIZE",
-      "index_name": "docs-index"
+      "index_name": "mnp-ai"
     }
   ],
   "ai": {
