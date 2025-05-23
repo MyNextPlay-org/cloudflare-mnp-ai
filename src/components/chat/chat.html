@@ -1,0 +1,61 @@
+<!-- Fixed Header -->
+<header class="fixed top-0 inset-x-0 h-14 bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-700 flex items-center justify-between px-4 z-50">
+  <img src="$.logo" alt="MyNextPlay" class="h-8" />
+  <a
+    href="https://auth.mynextplay.dropsite.ai/logout"
+    class="text-sm font-semibold text-blue-500 hover:underline"
+  >
+    Logout
+  </a>
+</header>
+
+<!-- Main Chat Interface -->
+<div
+  x-data="chat()"
+  class="relative max-w-screen-md mx-auto pt-20 pb-28 px-4 overflow-y-auto"
+>
+  <template x-for="(msg, i) in messages">
+    <div class="flex items-start mb-6" :key="i">
+      <div
+        class="w-24 shrink-0 text-sm font-semibold"
+        :class="msg.role === 'user' ? 'text-gray-500 dark:text-gray-400' : 'text-blue-600 dark:text-blue-400'"
+        x-text="msg.role.charAt(0).toUpperCase() + msg.role.slice(1)"
+      ></div>
+
+      <template x-if="msg.role === 'user'">
+        <pre
+          class="whitespace-pre-wrap font-mono text-sm text-gray-800 dark:text-gray-100"
+          x-text="msg.content"
+        ></pre>
+      </template>
+
+      <template x-if="msg.role === 'assistant'">
+        <div
+          class="prose max-w-none dark:prose-invert dark:text-gray-100 text-sm"
+          x-html="msg.html"
+        ></div>
+      </template>
+    </div>
+  </template>
+
+  <div class="fixed inset-x-0 bottom-0 bg-white dark:bg-gray-900 border-t border-gray-300 dark:border-gray-700">
+    <form
+      @submit="sendMessage"
+      class="max-w-screen-md mx-auto px-4 py-3 flex items-center space-x-2"
+    >
+      <textarea
+        x-model="input"
+        class="flex-1 resize-none border border-gray-300 dark:border-gray-700 rounded-md p-2 text-sm font-mono bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        rows="2"
+        placeholder="Type your message..."
+      ></textarea>
+      <button
+        type="submit"
+        :disabled="sending"
+        class="shrink-0 px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Send
+      </button>
+    </form>
+  </div>
+</div> 

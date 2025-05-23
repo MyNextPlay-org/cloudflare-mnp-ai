@@ -1,6 +1,6 @@
 import "./login.css";
 import { handlePasskeyAuth } from "@/helpers/passkey-client";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo.svg";
 import passkey from "@/assets/passkey.svg";
 import { html } from "@respond-run/html";
 

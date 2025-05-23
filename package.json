@@ -22,9 +22,11 @@
     "@respond-run/router": "0.3.0",
     "@tailwindcss/vite": "4.1.5",
     "@teamhanko/passkeys-sdk": "0.2.1",
+    "@types/marked": "^5.0.2",
     "alpinejs": "3.14.9",
     "kysely": "0.28.2",
     "kysely-d1": "0.4.0",
+    "marked": "^15.0.12",
     "resend": "4.5.0",
     "tailwindcss": "4.1.5"
   },
