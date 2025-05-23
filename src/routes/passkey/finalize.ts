@@ -23,6 +23,8 @@ export const POST = async (request: Request, env: Env): Promise<Response> => {
     });
   }
 
+  console.log("user", user);
+
   if (user?.registered) {
     const result = await passkey.login.finalize(body.credential);
     if (!result.token) {
