@@ -19,7 +19,6 @@ export function parseTokenCookie(request: Request): string | null {
 export function setTokenCookie(request: Request, token: string): string {
   const domain = getCookieDomain(request);
   const secure = isSecureRequest(request) ? "Secure; SameSite=None; " : "";
-  console.log(`token=${token}; Path=/; ${domain}${secure}Max-Age=${24 * 60 * 60}`);
   return `token=${token}; Path=/; ${domain}${secure}Max-Age=${24 * 60 * 60}`;
 }
 
