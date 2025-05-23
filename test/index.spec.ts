@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { env, createExecutionContext, waitOnExecutionContext } from "cloudflare:test";
-import worker from "../dist/cloudflare_template/server";
+import worker from "../dist/cloudflare_mnp_ai/server";
 
 describe("Root endpoint", () => {
   it("responds with 200 and HTML content", async () => {
