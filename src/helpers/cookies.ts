@@ -1,12 +1,13 @@
 export function getCookieDomain(request: Request): string {
-  const url = new URL(request.url);
-  const hostname = url.hostname;
-  let cookieDomain = "";
-  if (hostname.includes(".")) {
-    // This converts "auth.worker.dev" to ".worker.dev"
-    cookieDomain = `Domain=${hostname.replace(/^[^.]+\./, ".")}; `;
+  const hostname = new URL(request.url).hostname;
+  const parts = hostname.split(".");
+  // if host is "localhost" or single‐label, leave domain blank for host-only cookie
+  if (parts.length >= 2) {
+    // grab the last two segments
+    const domain = parts.slice(-2).join(".");
+    return `Domain=.${domain}; `;
   }
-  return cookieDomain;
+  return "";
 }
 
 export function parseTokenCookie(request: Request): string | null {
